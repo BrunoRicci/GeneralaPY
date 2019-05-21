@@ -202,5 +202,4 @@ def MenuPrincipal():
 
 DebugPrint('Elegir_Dados()=' + str(Elegir_dados()))
 
-print('FIN DEL PROGRAMA')
 # aaaaaaaaaaaaaaaaaaaaaaaaaaa
