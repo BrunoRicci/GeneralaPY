@@ -116,14 +116,21 @@ def Elegir_dados():
         if len(dados) == 0:  # Si la lista está vacía...
             ingreso_ok = 1
         elif len(dados) > 5:
+            ingreso_ok = 0
             MensajeError('Error en el ingreso. Intente de nuevo.')
-        else:
+
+        else:           # Si el ingreso tiene solo 5 elementos...
+
+            for i in dados:
+                if len(i)>1:    #Si tiene más de 1 de largo...
+                    ingreso_ok = 0
+                    MensajeError('Error en el ingreso. Intente de nuevo.')
 
             for i in dados:
                 # Recorre la lista ingresada en busca de erores. Si no hay, la devuelve formateada,
                 # y pone la variable "ingreso_ok" en 1 para salir del bucle.
 
-                if i(not (int(i) >= 0 and int(i) <= 5)):  # Si contiene caracteres no válidos...
+                if (not (int(i) >= 0 and int(i) <= 5)):  # Si contiene caracteres no válidos...
                     a=0
                 elif dados.count(i) > 1:  # Si el dado se repite...
                     # Muestra mensaje de error y volver a pedir ingreso.
