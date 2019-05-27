@@ -115,6 +115,7 @@ def Elegir_dados():
 
         for aux in dados:
             if aux == '':
+                ingreso_ok=0 #error. #todo: HACER QUE BLOQUEE ACÁ Y PIDA REINGRESAR
 
 
         pos=int(dados[contador])
@@ -165,9 +166,9 @@ def Elegir_dados():
     dados.sort(reverse=False)  # ordena los elementos de menor a mayor.
 
     DebugPrint('dados=' + str(dados))  # DEBUG: Muestra lista generada.
-    if len(dados) == 0:
+    if ingreso_ok==0:
         return list('0')
-    else:
+    elif ingreso_ok==1:
         return dados  # Devuelve lista como resultado de la función.
 
 
