@@ -105,32 +105,62 @@ def Elegir_dados():
     # son válidos.
     #
 
-    while ingreso_ok == 0:
-        # Pide al usuario que seleccione los dados a relanzar y los guarda en la lista.
+    dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: '))
+    dados = dados.split(',')  # Genera lista con los dados
+    DebugPrint('dados='+str(dados))
+    DebugPrint('len(dados)='+str(len(dados)))
+    if len(dados) <= 5:
+        #Continúa...
+        contador = 0
 
-        dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: '))
-        dados = dados.split(',')  # Genera lista con los dados
+        for aux in dados:
+            if aux == '':
 
-        DebugPrint('dados=' + str(dados))  # DEBUG: Muestra lista generada
 
-        if len(dados) == 0:  # Si la lista está vacía...
-            ingreso_ok = 1
-        elif len(dados) > 5:
-            MensajeError('Error en el ingreso. Intente de nuevo.')
+        pos=int(dados[contador])
+
+        DebugPrint('pos='+str(pos))
+        DebugPrint('tipo pos=' + str(type(pos)))
+
+        while ((pos >= int(0)) and (pos <= int(0))) and (contador < int(len(dados))):
+            contador=contador+1
+            pos = dados[contador]
+
+        if contador == len(dados):      #Si todos los elementos cumplieron con la condición de ser de entre 0 y 9...
+           ingreso_ok=1     # Continua...
         else:
+            ingreso_ok = 0  # Error, volver a ingresar.
 
-            for i in dados:
-                # Recorre la lista ingresada en busca de erores. Si no hay, la devuelve formateada,
-                # y pone la variable "ingreso_ok" en 1 para salir del bucle.
+    else:
+        a=0#Error, volver a ingresar.
 
-                if i(not (int(i) >= 0 and int(i) <= 5)):  # Si contiene caracteres no válidos...
 
-                elif dados.count(i) > 1:  # Si el dado se repite...
-                    # Muestra mensaje de error y volver a pedir ingreso.
-                    MensajeError('Error en el ingreso.')
-
-        # Muestra mensaje de error y volver a pedir ingreso.
-        if ingreso_ok == 1:
+    # while ingreso_ok == 0:
+    #     # Pide al usuario que seleccione los dados a relanzar y los guarda en la lista.
+    #
+    #     dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: '))
+    #     dados = dados.split(',')  # Genera lista con los dados
+    #
+    #     DebugPrint('dados=' + str(dados))  # DEBUG: Muestra lista generada
+    #
+    #     if len(dados) == 0:  # Si la lista está vacía...
+    #         ingreso_ok = 1
+    #     elif len(dados) > 5:
+    #         MensajeError('Error en el ingreso. Intente de nuevo.')
+    #     else:
+    #
+    #         for i in dados:
+    #             # Recorre la lista ingresada en busca de erores. Si no hay, la devuelve formateada,
+    #             # y pone la variable "ingreso_ok" en 1 para salir del bucle.
+    #
+    #             if i(not (int(i) >= 0 and int(i) <= 5)):  # Si contiene caracteres no válidos...
+    #
+    #             elif dados.count(i) > 1:  # Si el dado se repite...
+    #                 # Muestra mensaje de error y volver a pedir ingreso.
+    #                 MensajeError('Error en el ingreso.')
+    #
+    #     # Muestra mensaje de error y volver a pedir ingreso.
+    #     if ingreso_ok == 1:
 
     dados.sort(reverse=False)  # ordena los elementos de menor a mayor.
 
@@ -162,7 +192,8 @@ def Turno_Jugador(jugador):
         # DebugPrint('dados_relanzados=' + str(dados_relanzados))
         # DebugPrint('len(dados_relanzados)= ' + str(len(dados_relanzados)))
 
-        jugada = OrdenarDados(Tirar_Dados(jugada, [1, 2, 3, 4, 5]))  # PRUEBA: Lanza todos los dados...
+        dadosatirar=[1,2,3,4,5]     #prueba
+        jugada = OrdenarDados(Tirar_Dados(jugada, dadosatirar))  # PRUEBA: Lanza todos los dados...
 
         print('   Tiro ' + str(contador_tiros) + ': ' + str(jugada))  # Muestra los dados
 
