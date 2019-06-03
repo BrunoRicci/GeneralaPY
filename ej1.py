@@ -112,15 +112,16 @@ def Elegir_dados():
 
     dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: '))
     dados = dados.split(',')  # Genera lista con los dados
-#    DebugPrint('dados='+str(dados))
+    DebugPrint('dados='+str(dados))
 #    DebugPrint('len(dados)='+str(len(dados)))
 
     if len(dados) <= 5:     #Continúa...
         contador = 0
 
-        for aux in dados:
-            if aux == '':
-                ingreso_ok=0 #error. #todo: HACER QUE BLOQUEE ACÁ Y PIDA REINGRESAR
+        #for aux in dados:
+
+        if dados[0] == '':
+            ingreso_ok=0 #error. #todo: HACER QUE BLOQUEE ACÁ Y PIDA REINGRESAR
 
         contador=0  #Contador para recorrer la lista.
         pos=1 #inicializo para un valor que entre al while en el primer ciclo.
@@ -211,6 +212,6 @@ def MenuPrincipal():
 
 #jugada=Tirar_Dados([0,0,0,0,0],[1,2,3,4,5])
 # #DebugPrint('jugada= '+str(jugada))
-# DebugPrint('Elegir_Dados()=' + str(Elegir_dados()))
+DebugPrint('Elegir_Dados()=' + str(Elegir_dados()))
 
 #DebugPrint('Turno_Jugador: '+str(Turno_Jugador(1)))
