@@ -57,25 +57,31 @@ def Tirar_Dados(j, d_n):
     # Recibe una jugada (estado inicial de los dados) y distintas posiciones de dados (d_n -> 1 <= n <= 5)
     # a volver a lanzar (dn=1),y otras a conservar (dn=0)
 
-    contador=0
-    for var in d_n:             # Convierte cada elemento de la lista de formato "string" a formato "int".
-        d_n[contador]=int(var)
-        contador=contador+1
-    # DebugPrint('d_n='+str(d_n))
-    # DebugPrint('len(d_n)='+str(len(d_n)))
+    if d_n != 0:    #Si no se le ingresa un valor incorrecto...
+        contador=0
+        for var in d_n:             # Convierte cada elemento de la lista de formato "string" a formato "int".
+            d_n[contador]=int(var)
+            contador=contador+1
+        # DebugPrint('d_n='+str(d_n))
+        # DebugPrint('len(d_n)='+str(len(d_n)))
 
-    for contador in range(0, len(j)):
-        if d_n[contador] == contador + 1:  # Si coincide el numero (dado seleccionado)...
-            DebugPrint('contador = ' + str(contador))
-            j[contador] = (random.randrange(1, 7))  # Lanza dado y reemplaza el valor anterior.
-            contador = contador + 1  # Selecciona próximo dado.
-            # todo: Hacer que en la función de ElegirDados ponga los elementos de la lista que no se usan en 0.
-            # todo: ejemplo: 1,2,4 -> [1,2,4,0,0]
+        # ##Puede que haya que sacarlo...
+        # while len(d_n) < len(j):      #Hace que el largo de la lista "d_n" sea igual al de "j", agregando elementos al final de esta.
+        #     d_n.append(0)
+        #
+        # for contador in range(0, len(j)):
+        #     if d_n[contador] == contador + 1:  # Si coincide el numero (dado seleccionado)...
+        #         j[contador] = (random.randrange(1, 7))  # Lanza dado y reemplaza el valor anterior.
+        #         # todo: Hacer que en la función de ElegirDados ponga los elementos de la lista que no se usan en 0.
+        #         # todo: ejemplo: 1,2,4 -> [1,2,4,0,0]
+
+        for dado in d_n:
+            j[dado-1] = (random.randrange(1, 7))  # Lanza dado y reemplaza el valor anterior.
+
     return j
 
-
 def OrdenarDados(dados):
-    # Ordena los dados de mayor a menor, ordenándolos de izquierda a derecha.
+    # Ordena los dados de mayor a menor, de izquierda a derecha.
 
     dados.sort(reverse=True)  # Ordena los elementos de mayor a menor, colocándolos de izquierda a derecha.
     return dados
@@ -159,14 +165,13 @@ def Turno_Jugador(jugador):
     for contador_tiros in range(2, 4):  # Ejecuta 2 veces, inciando desde 2.
 
         dados_relanzados=0
-
         while dados_relanzados == int(0):
             print('\n   Seleccione qué número(s) de dado quiere volver a tirar separados por coma. ')
             dados_relanzados = Elegir_dados()
-            DebugPrint('dados_relanzados=' + str(dados_relanzados))
+            #DebugPrint('dados_relanzados=' + str(dados_relanzados))
             if dados_relanzados == 0:        #Si no se ingresa nada...
+                # Dar aviso de error.
                 a=0
-
 
         jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # PRUEBA: Lanza todos los dados...
 
@@ -200,7 +205,12 @@ def MenuPrincipal():
 #Turno_Jugador(1)  # Turno del jugador numero 1
 
 #Tirar_Dados([0,0,0,0,0],['1','2','3'])
-Tirar_Dados([0,0,0,0,0],['1','2','3','4'])
+#DebugPrint('Tirar_Dados= '+str(Tirar_Dados([0,0,0,0,0],['1','2','4'])))
 
+#
 
-#DebugPrint('Elegir_Dados()=' + str(Elegir_dados()))
+#jugada=Tirar_Dados([0,0,0,0,0],[1,2,3,4,5])
+# #DebugPrint('jugada= '+str(jugada))
+# DebugPrint('Elegir_Dados()=' + str(Elegir_dados()))
+
+#DebugPrint('Turno_Jugador: '+str(Turno_Jugador(1)))
