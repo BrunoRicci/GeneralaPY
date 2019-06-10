@@ -1,5 +1,6 @@
 import random
 
+
 pos_puntajes = { # Nombre diccionario / ubicación en la lista.)
     '1':        0,
     '2':        1,
@@ -109,10 +110,10 @@ def Elegir_dados():
 
     dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: '))
     dados = dados.split(',')  # Genera lista con los dados
-    DebugPrint('dados='+str(dados))
+    # DebugPrint('dados='+str(dados))
 #    DebugPrint('len(dados)='+str(len(dados)))
 
-    if len(dados) <= 5:     #Continúa...
+    if len(dados) <= 5:     #Si tiene menos de 5 elementos, continúa...
         contador = 0
 
         #for aux in dados:
@@ -123,11 +124,12 @@ def Elegir_dados():
         contador=0  #Contador para recorrer la lista.
         pos=1 #inicializo para un valor que entre al while en el primer ciclo.
         for pos in dados:
-            if (ingreso_ok != 0 and (int(pos) >= int(0)) and (int(pos) <= int(5))):
-                ingreso_ok = 1
-                contador=contador+1
-            else:
-                ingreso_ok = 0
+            #if type(pos) == type(int(1)):       # Si es numero entero... todo: HACER QUE EVITE LOS CARACTERES NO NUMERICOS...
+                if (ingreso_ok != 0 and (int(pos) >= int(0)) and (int(pos) <= int(5))):
+                    ingreso_ok = 1
+                    contador=contador+1
+                else:
+                    ingreso_ok = 0
 
         if contador == len(dados):      #Si todos los elementos cumplieron con la condición de ser de entre 0 y 9...
             ingreso_ok = 1     # Continua...
@@ -163,14 +165,13 @@ def Turno_Jugador(jugador):
 
         dados_relanzados=0
         while dados_relanzados == int(0):
-            print('\n   Seleccione qué número(s) de dado quiere volver a tirar separados por coma. ')
             dados_relanzados = Elegir_dados()
             #DebugPrint('dados_relanzados=' + str(dados_relanzados))
             if dados_relanzados == 0:        #Si no se ingresa nada...
                 # Dar aviso de error.
                 a=0
 
-        jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # PRUEBA: Lanza todos los dados...
+        jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
 
         print('   Tiro ' + str(contador_tiros) + ': ' + str(jugada))  # Muestra los dados
 
@@ -280,17 +281,29 @@ def CorrerJuego (tabla_puntajes):
     jugada_terminada = 0    # Inicializo variable
     jugador = 1               # Inicializo variable de turno de jugador
     # todo: Obtener numero de turno de jugador.
+    lista_jugadores = []    # Obtiene nombres de todos los jugadores de la tabla.
     puntaje = []            # Inicializo lista
+
+    # DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
+    # DebugPrint('len(tabla_puntajes= '+str(len(tabla_puntajes)))
 
     while jugada_terminada != 1:        # Hasta que se termine la jugada...
         puntaje=Turno_Jugador(jugador)    # Inicia el turno del jugador...
         AnotarPuntaje(tabla_puntajes,jugador,puntaje)
 
+        jugador = jugador+1
 
-def AnotarPuntaje (anotador, jugador, valor)
-    #En un determinado anotador (tabla formada por listas), selecciona la lista de un jugador, y le anota un puntaje en
-    #la posición indicada. La posición se encuentra por diccionario, ya que la variable "valor" es una lista con la jugada
-    #donde se va anotar (números o jugadas especiales), mas el valor del puntaje a anotar.
+
+def AnotarPuntaje (anotador, jugador, valor):
+    # En un determinado anotador (tabla formada por listas), selecciona la lista de un jugador, y le anota un puntaje en
+    # la posición indicada. La posición se encuentra por diccionario, ya que la variable "valor" es una lista con la jugada
+    # donde se va anotar (números o jugadas especiales), mas el valor del puntaje a anotar.
+
+    return 0
+
+def SalirJuego():
+    #Sale del juego.
+    return 1
 
 
 def MenuPrincipal():
@@ -301,6 +314,7 @@ def MenuPrincipal():
     print('\n')
     print('1 - Nuevo juego.')
     print('2 - Cargar juego.')      # Minimo requerimiento: que se pueda leer una sola jugada (no más de una).
+    print('3 - Salir.')
 
     opcion=int(input())
 
@@ -308,6 +322,8 @@ def MenuPrincipal():
         tabla=NuevaPartida()        # Crea una nueva tabla de puntajes y la guarda en la BDD.
     elif opcion == 2:
         tabla=CargarPartida()       # Lee una tabla de puntajes ya existente.
+    elif opcion == 3:
+        SalirJuego()
 
     CorrerJuego(tabla)      #Inicia el juego con la tabla actual seleccionada (nueva o continuada).
 
@@ -331,7 +347,9 @@ def MenuPrincipal():
 
 #DebugPrint('Turno_Jugador: '+str(Turno_Jugador(1)))
 
-NuevaPartida()
+#CorrerJuego(NuevaPartida())
 #ArmarTablaPuntajes(['Jugador 1','Jugador 2','Jugador 3'])
+
+CorrerJuego(NuevaPartida())
 
 
