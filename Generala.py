@@ -1,20 +1,24 @@
 import random
 
 
-pos_puntajes = { # Nombre diccionario / ubicación en la lista.)
-    '1':        0,
-    '2':        1,
-    '3':        2,
-    '4':        3,
-    '5':        4,
-    '6':        5,
-    'Escalera': 6,
-    'Full':     7,
-    'Poker':    8,
-    'Generala': 9,
-    '2Generala':10
+dicc_puntajes = { # Nombre diccionario / ubicación en la lista.)
+    'Nombre':   0,
+    '1':        1,
+    '2':        2,
+    '3':        3,
+    '4':        4,
+    '5':        5,
+    '6':        6,
+    'Escalera': 7,
+    'Full':     8,
+    'Poker':    9,
+    'Generala': 10,
+    '2Generala':11
 }
 
+puntajes = {
+
+}
 
 puntajes_jugador = []
 
@@ -147,16 +151,19 @@ def Elegir_dados():
         dados.sort(reverse=False)  # ordena los elementos de menor a mayor.
         return dados                # Devuelve lista como resultado de la función.
 
-def Turno_Jugador(jugador):
+def Turno_Jugador(puntaje):
     # Recibe de qué jugador es el turno, para saber qué posiciones de puntajes ya tiene utilizadas, y así
     # no dar posibilidad de sobreescribirlo.
     # Además, si el jugador hizo uno o más tiros y salió del juego, esto queda guardado en su "status", por
     # lo cual esto permite evitar que salga y vuelva a entrar al juego para repetir su turno "desde cero".
     # todo ver posiblildad de hacerla compatible con la generala servida.
 
+    ######################### Recibe el nombre del jugador, y extrae el puntaje con el mismo. ##########################
+
     jugada = [0, 0, 0, 0, 0]  # Inicializo la lista "jugada" con todos en 0...
     jugada = OrdenarDados(Tirar_Dados(jugada, [1, 2, 3, 4, 5]))  # Tira todos los dados.
 
+    print('       TURNO')
     print('   Tiro 1: ' + str(jugada))  # Muestra los dados
 
     # Permite hacer los 3 tiros al jugador, y elegir qué dados volver a tirar...
@@ -281,14 +288,18 @@ def CorrerJuego (tabla_puntajes):
     jugada_terminada = 0    # Inicializo variable
     jugador = 1               # Inicializo variable de turno de jugador
     # todo: Obtener numero de turno de jugador.
-    lista_jugadores = []    # Obtiene nombres de todos los jugadores de la tabla.
+
+    # Obtiene nombres de todos los jugadores de la tabla.
+    lista_jugadores = []
+
+
     puntaje = []            # Inicializo lista
 
     # DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
     # DebugPrint('len(tabla_puntajes= '+str(len(tabla_puntajes)))
 
     while jugada_terminada != 1:        # Hasta que se termine la jugada...
-        puntaje=Turno_Jugador(jugador)    # Inicia el turno del jugador...
+        puntaje=Turno_Jugador(tabla_puntajes[jugador])      # Inicia el turno del jugador...
         AnotarPuntaje(tabla_puntajes,jugador,puntaje)
 
         jugador = jugador+1
