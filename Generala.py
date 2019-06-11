@@ -1,24 +1,22 @@
 import random
 
 
-dicc_puntajes = { # Nombre diccionario / ubicación en la lista.)
+dicc_anotador = { # Nombre diccionario / ubicación en la lista.)
     'Nombre':   0,
-    '1':        1,
-    '2':        2,
-    '3':        3,
-    '4':        4,
-    '5':        5,
-    '6':        6,
-    'Escalera': 7,
-    'Full':     8,
-    'Poker':    9,
-    'Generala': 10,
-    '2Generala':11
+    'Turno':    1,
+    '1':        2,
+    '2':        3,
+    '3':        4,
+    '4':        5,
+    '5':        6,
+    '6':        7,
+    'Escalera': 8,
+    'Full':     9,
+    'Poker':    10,
+    'Generala': 11,
+    '2Generala':12
 }
 
-puntajes = {
-
-}
 
 puntajes_jugador = []
 
@@ -163,24 +161,26 @@ def Turno_Jugador(puntaje):
     jugada = [0, 0, 0, 0, 0]  # Inicializo la lista "jugada" con todos en 0...
     jugada = OrdenarDados(Tirar_Dados(jugada, [1, 2, 3, 4, 5]))  # Tira todos los dados.
 
-    print('       TURNO')
-    print('   Tiro 1: ' + str(jugada))  # Muestra los dados
+    print('- - - - -   TURNO DE '+str(puntaje[dicc_anotador['Nombre']])+'   - - - - -\n')
+   # print('   Tiro 1: ' + str(jugada)+'\n')  # Muestra los dados
 
     # Permite hacer los 3 tiros al jugador, y elegir qué dados volver a tirar...
-    # todo: PERMITIR PLANTARSE AHÍ Y NO SEGUIR TIRANDO!!
-    for contador_tiros in range(2, 4):  # Ejecuta 2 veces, inciando desde 2.
+    # todo: PERMITIR PLANTARSE AHÍ Y NO SEGUIR TIRANDO!! -> Se puede poner "0" al seleccionar dados a relanzar y listo...
+    contador_tiros=0
+    dados_relanzados=[1,2,3,4,5]    # Inicializo variable, para que lance todos los dados.
+    while contador_tiros < 2:  # Ejecuta 2 veces, inciando desde 2.
+
+        jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
+        print('   Tiro ' + str(contador_tiros+1) + ': ' + str(jugada))  # Muestra los dados
 
         dados_relanzados=0
         while dados_relanzados == int(0):
             dados_relanzados = Elegir_dados()
             #DebugPrint('dados_relanzados=' + str(dados_relanzados))
-            if dados_relanzados == 0:        #Si no se ingresa nada...
-                # Dar aviso de error.
-                a=0
-
-        jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
-
-        print('   Tiro ' + str(contador_tiros) + ': ' + str(jugada))  # Muestra los dados
+            if dados_relanzados[0] == 0:        #Si no se ingresa nada...
+                a=0 # Dar aviso de error.
+            elif dados_relanzados[0] == '0':
+                contador_tiros=4
 
         contador_tiros = contador_tiros + 1  # Incrementa contador.
 
@@ -188,8 +188,9 @@ def Turno_Jugador(puntaje):
 
     # todo: VER PUNTAJE ACTUAL DEL JUGADOR Y PERMITIR ELEGIR EN QUÉ CASILLERO SE QUIERE ANOTAR LOS PUNTOS.
     # todo: Función para leer puntaje. Menú para mostrar posibliidades y elegir una.
-    # todo: punaje=ElegirJugada ...
-    print('\n\nJugada armada: ' + str(puntaje))  # Determina qué jugada logró armar el jugador luego de sus tres tiros.
+    # todo: puntaje=ElegirJugada ...
+
+    print('\nJugada armada: ' + str(puntaje))  # Determina qué jugada logró armar el jugador luego de sus tres tiros.
 
                     #todo: sumar 5 si "contador_tiros" indica que solo se tiró una vez.
                     #todo: hacer que se indique si fue una jugada servida, ya que en caso se ser generala doble, el jugador gana.
@@ -197,14 +198,14 @@ def Turno_Jugador(puntaje):
                     #todo: había salido (generala doble) entonces es generala doble servida.
                                 # todo: Para acceder al anotador:    if anotador[jugador][cont] == int(0): lista_aux.append(cont)
                                 # todo: busca qué posiciones están en 0 (sin anotar) y las guarda en una lista auxiliar.
-    puntaje_final = 0           # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
+    puntaje_final = puntaje           # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
     return puntaje_final
 
 def NuevaPartida():
     # Borrar pantalla.
     print('     Nueva partida:\n\n')
 
-    lista_jugadores=PedirJugadores()
+    lista_jugadores=PedirJugadores()        #Pide que se ingresen los jugadores.
 
     print('Los jugadores son:')  # Imprime la lista de jugadores.
     for aux in lista_jugadores:
@@ -269,9 +270,10 @@ def ArmarTablaPuntajes (jugadores):
     columna = []
 
     for nombre in jugadores:
-        columna.append(nombre)
-        for i in range(0,11):           # Agrega 11 elementos a la lista, incializando todos en valor int(0).
-            columna.append(int(0))
+        columna.append(nombre)  # Coloca el nombre en la columna
+        columna.append(0)       # Coloca numero de turno en la columna
+        for i in range(0,11):           # Agrega 11 elementos a la lista, incializando todos en valor int(-1) -> casillero vacío.
+            columna.append(int(-1))
         # DebugPrint('columna = ' + str(columna))
         anotador.append(columna)        # Agrega columna generada al anotador.
         columna=[]                      # Limpia lista de columna.
@@ -285,24 +287,35 @@ def CorrerJuego (tabla_puntajes):
     # de turno (jugador) y el número de tiro actual.
     # Controla el orden de los turnos de los jugadores.
 
-    jugada_terminada = 0    # Inicializo variable
-    jugador = 1               # Inicializo variable de turno de jugador
-    # todo: Obtener numero de turno de jugador.
+    finalizar_ronda = 0    # Inicializo variable
+    num_ronda = 0   # todo: A esta variable hay que asignarle el valor actual de la partida.
+                    # todo: Hacer función que lea el anotador y vea cuántos casilleros tienen marcados exclusivamente TODOS los jugadores, para obtenerlo.
+    # todo: Obtener numero de turno de jugador. -> Leyendo la columna ""
 
     # Obtiene nombres de todos los jugadores de la tabla.
     lista_jugadores = []
 
 
-    puntaje = []            # Inicializo lista
+    DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
+    cantidad_jugadores=len(tabla_puntajes)
+    DebugPrint('type tabla_puntajes: '+str(type(tabla_puntajes)))
+    DebugPrint('len(tabla_puntajes) = '+str(len(tabla_puntajes)))
 
-    # DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
-    # DebugPrint('len(tabla_puntajes= '+str(len(tabla_puntajes)))
 
-    while jugada_terminada != 1:        # Hasta que se termine la jugada...
-        puntaje=Turno_Jugador(tabla_puntajes[jugador])      # Inicia el turno del jugador...
-        AnotarPuntaje(tabla_puntajes,jugador,puntaje)
+    while num_ronda < 11 or finalizar_ronda != 1:
+        jugador = 0  # Inicializo variable de turno de jugador -> todo: Leer el numero de turno desde el anotador.
 
-        jugador = jugador+1
+        while jugador < (cantidad_jugadores):        # Recorre los turnos hasta que se termine la ronda...
+            puntaje=Turno_Jugador(tabla_puntajes[jugador])      # Inicia el turno del jugador...
+
+            if puntaje != 'FIN':
+                tabla_puntajes=AnotarPuntaje(tabla_puntajes,jugador,puntaje)       # Anota el puntaje.
+                jugador = jugador + 1
+            else:
+                finalizar_ronda = 1
+
+        num_ronda=num_ronda+1   #Incrementa el numero de ronda.
+
 
 
 def AnotarPuntaje (anotador, jugador, valor):
@@ -310,7 +323,7 @@ def AnotarPuntaje (anotador, jugador, valor):
     # la posición indicada. La posición se encuentra por diccionario, ya que la variable "valor" es una lista con la jugada
     # donde se va anotar (números o jugadas especiales), mas el valor del puntaje a anotar.
 
-    return 0
+    return anotador
 
 def SalirJuego():
     #Sale del juego.
@@ -360,6 +373,7 @@ def MenuPrincipal():
 
 #CorrerJuego(NuevaPartida())
 #ArmarTablaPuntajes(['Jugador 1','Jugador 2','Jugador 3'])
+
 
 CorrerJuego(NuevaPartida())
 
