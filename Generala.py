@@ -1,5 +1,5 @@
 import random
-
+import sys
 
 dicc_anotador = { # Nombre diccionario / ubicación en la lista.)
     'Nombre':   0,
@@ -375,6 +375,6 @@ def MenuPrincipal():
 #ArmarTablaPuntajes(['Jugador 1','Jugador 2','Jugador 3'])
 
 
-CorrerJuego(NuevaPartida())
-
+#CorrerJuego(NuevaPartida())
+print(str(sys.path[0]))
 
