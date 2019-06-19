@@ -4,9 +4,27 @@
 import sqlite3
 import sys          # Para obtener el directorio actual, y para acceder a la hora.
 
-def CrearTabla (tabla, nombre):
-    #Crea base de datos con el nombre asignado
+def CrearTabla (bdd, nombre):
+    #Crea anotador (tabla) de puntaje en una base de datos, con el nombre dado.
 
+   bdd.execute("""
+        CREATE TABLE IF NOT EXISTS """ '\'' + str(nombre) + '\''  """ (
+    	'ID' INTEGER PRIMARY KEY AUTOINCREMENT,
+    	'Turno' INTEGER,
+    	'Nombre' TEXT,
+    	'Uno' INTEGER,
+    	'Dos' INTEGER,
+    	'Tres' INTEGER,
+    	'Cuatro' INTEGER,
+    	'Cinco' INTEGER,
+    	'Seis' INTEGER,
+    	'Escalera' INTEGER,
+    	'Full' INTEGER,
+    	'Poker' INTEGER,
+    	'Generala' INTEGER,
+    	'2Generala' INTEGER
+        );
+                    """)
 
 
 directorio_local= str(sys.path[0])          # Directorio local donde se aloja el programa.
@@ -18,9 +36,8 @@ bdd_actual = bdd.cursor()   #Asigna el cursor.
 print('bdd = '+str(directorio_local+'\\'+nombre_archivo_bdd))
 print('bdd = '+str(bdd))
 
-
-bdd_actual.execute('SELECT * FROM "PARTIDA"')
+nombre='Partida_1'
+CrearTabla(bdd_actual,nombre)
+bdd_actual.execute(" SELECT * FROM "+str(nombre))
 
 print('Contenido BDD:\n\n'+str(bdd_actual.fetchall()))  #Lee toda la tabla
-
-
