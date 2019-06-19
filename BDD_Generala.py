@@ -4,6 +4,7 @@
 import sqlite3
 import sys          # Para obtener el directorio actual, y para acceder a la hora.
 
+
 def CrearTabla (bdd, nombre):
     #Crea anotador (tabla) de puntaje en una base de datos, con el nombre dado.
 
@@ -29,25 +30,49 @@ def CrearTabla (bdd, nombre):
 def LeerTabla (bdd, nombre):
     bdd.execute('SELECT * FROM '+str(nombre))
 
-def EscribirTabla (bdd,lista):
+def EscribirTabla (bdd,nombre,lista):
     #Crea un registro y escribe una lista de datos ordenados en el mismo.
 
-    #"INSERT INTO " + '\'' +str(nombre)+ '\' + ({,,,TABLA ORDENADA,,,}) VALUES ()  '
-    a=0
+    print('DEBUG: lista = ' + str(lista))
+    # print('DEBUG: lista[0] = ' + str(lista[0]))
+    # print('DEBUG: lista[-1] = ' + str(lista[-1]))
+
+    if len(lista) == 14:
+        #bdd.execute()
+        bdd.execute("""
+        INSERT INTO """ '\''+str(nombre)+'\''""" ('ID','Turno','Nombre','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
+        """+ str(lista) + ';' """
+        """)
+
+        bdd_actual.commit()
+
+
+
+def IniciarBDD (directorio, nombreBDD):
+    #Recibe el directorio y el nombre de la base de datos.
+
+    #nombreBDD = 'BDD_Generala.db'  # Nombre del archivo de la BDD
+    #directorio = str(sys.path[0])  # Directorio local donde se aloja el programa.
+
+    bdd = sqlite3.connect(directorio + '\\' + nombreBDD)  # Accede a la base de datos.
+
+    # print('bdd = ' + str(directorio + '\\' + nombreBDD))
+    # print('bdd = ' + str(bdd))
+
+    return bdd
+
+
 
 directorio_local= str(sys.path[0])          # Directorio local donde se aloja el programa.
-nombre_archivo_bdd= 'BDD_Generala.db'       # Nombre del archivo de la BDD
 
-bdd=sqlite3.connect(directorio_local+'\\'+nombre_archivo_bdd)    # Accede a la base de datos.
-bdd_actual = bdd.cursor()   #Asigna el cursor.
+bdd_actual=IniciarBDD(directorio_local, 'BDD_Generala.db')  #Se conecta a la base de datos.
+bdd_cursor= bdd_actual.cursor()  # Asigna el cursor.
 
-print('bdd = '+str(directorio_local+'\\'+nombre_archivo_bdd))
-print('bdd = '+str(bdd))
+nombre_partida='Partida_1'
 
-nombre='Partida_1'
-
-CrearTabla(bdd_actual,nombre)
-
-LeerTabla(bdd_actual,nombre)
-
-print('Contenido BDD:\n\n'+str(bdd_actual.fetchall()))  #Lee toda la tabla
+# CrearTabla(bdd_actual,nombre_partida)
+#
+# EscribirTabla(bdd_cursor,'Partida_1',tuple([1,'BRUNO',1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]))
+#
+# LeerTabla(bdd_cursor,nombre_partida)
+# print('Contenido BDD:\n\n'+str(bdd_cursor.fetchall()))  #Lee toda la tabla

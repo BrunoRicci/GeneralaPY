@@ -207,7 +207,7 @@ def NuevaPartida():
     # Borrar pantalla.
     print('     Nueva partida:\n\n')
 
-    lista_jugadores=PedirJugadores()        #Pide que se ingresen los jugadores.
+    lista_jugadores=PedirIngresoJugadores()        #Pide que se ingresen los jugadores.
 
     print('Los jugadores son:')  # Imprime la lista de jugadores.
     for aux in lista_jugadores:
@@ -238,7 +238,7 @@ def CargarPartida():
     nombre='Partida_1'
     return BDD_Generala.LeerTabla(nombre)
 
-def PedirJugadores ():
+def PedirIngresoJugadores ():
 
     lista_jugadores = []  # Inicializo una lista que contendrá los nombres de cada jugador
 
@@ -281,6 +281,7 @@ def ArmarTablaPuntajes (jugadores):
         anotador.append(columna)        # Agrega columna generada al anotador.
         columna=[]                      # Limpia lista de columna.
 
+    anotador[0][dicc_anotador['Turno']]=1       #Pone numero "1" en el primer jugador; indicando que va por el primer tiro...
     #DebugPrint('anotador = ' + str(anotador))
 
     return anotador
@@ -299,10 +300,10 @@ def CorrerJuego (tabla_puntajes):
     lista_jugadores = []
 
 
-    DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
+    # DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
     cantidad_jugadores=len(tabla_puntajes)
-    DebugPrint('type tabla_puntajes: '+str(type(tabla_puntajes)))
-    DebugPrint('len(tabla_puntajes) = '+str(len(tabla_puntajes)))
+    # DebugPrint('type tabla_puntajes: '+str(type(tabla_puntajes)))
+    # DebugPrint('len(tabla_puntajes) = '+str(len(tabla_puntajes)))
 
 
     while num_ronda < 11 or finalizar_ronda != 1:
@@ -354,6 +355,8 @@ def MenuPrincipal():
 
     CorrerJuego(tabla)      #Inicia el juego con la tabla actual seleccionada (nueva o continuada).
 
+
+    return 1 #Finaliza el programa sin error...
 #############################################################################-
 ############################### PROGRAMA ####################################-
 #############################################################################-
