@@ -183,10 +183,11 @@ def Turno_Jugador(puntaje):
         dados_relanzados=0
         while dados_relanzados == int(0):
             dados_relanzados = Elegir_dados()
-            DebugPrint('dados_relanzados=' + str(dados_relanzados))
+            #DebugPrint('dados_relanzados=' + str(dados_relanzados))
+
             if dados_relanzados[0] == 0:        #Si no se ingresa nada...
                 a=0 # Dar aviso de error.
-            elif dados_relanzados[0] == '0':
+            elif dados_relanzados[0] == '0':        #todo: Hacer algo para evitar que si el resultado de Elegir_dados da 0 (error) no entre al if que accede a la posicion [0, ya que esto no es posible.
                # dados_relanzados=[0,0,0,0,0]
                 fin_turno=1
 
@@ -223,6 +224,8 @@ def NuevaPartida():
     print('     Nueva partida:\n\n')
 
     lista_jugadores=PedirIngresoJugadores()        #Pide que se ingresen los jugadores.
+    nombre_partida= BDD_Generala.nombre_partida
+    cursor=BDD_Generala.bdd_cursor
 
     print('Los jugadores son:')  # Imprime la lista de jugadores.
     for aux in lista_jugadores:
@@ -238,7 +241,11 @@ def NuevaPartida():
     #         #Vuelve atrás... -> Llamar a la misma función?
     #         a=0
 
+    BDD_Generala.CrearTabla(cursor, nombre_partida)        #Crea tabla (si no existe) con el nombre dado.
     tabla_jugadores=ArmarTablaPuntajes(lista_jugadores)
+
+    for registro in tabla_jugadores:
+        BDD_Generala.EscribirTabla(cursor,nombre_partida,registro)
 
     #todo: GRABAR TABLA GENERADA EN BASE DE DATOS.
     #todo: Hacer función que reciba tabla (verificar que sea información úttil por las dudas) y
@@ -286,8 +293,11 @@ def ArmarTablaPuntajes (jugadores):
 
     anotador = []
     columna = []
+    num_jugador=1  #Arranca en 1 (PK de la BDD).
 
     for nombre in jugadores:
+        columna.append(num_jugador)
+        num_jugador=num_jugador+1       #Incrementa numero
         columna.append(nombre)  # Coloca el nombre en la columna
         columna.append(0)       # Coloca numero de turno en la columna
         for i in range(0,11):           # Agrega 11 elementos a la lista, incializando todos en valor int(-1) -> casillero vacío.
@@ -336,7 +346,6 @@ def CorrerJuego (tabla_puntajes):
         num_ronda=num_ronda+1   #Incrementa el numero de ronda.
 
 
-
 def AnotarPuntaje (anotador, jugador, valor):
     # En un determinado anotador (tabla formada por listas), selecciona la lista de un jugador, y le anota un puntaje en
     # la posición indicada. La posición se encuentra por diccionario, ya que la variable "valor" es una lista con la jugada
@@ -371,7 +380,7 @@ def MenuPrincipal():
     CorrerJuego(tabla)      #Inicia el juego con la tabla actual seleccionada (nueva o continuada).
 
 
-    return 1 #Finaliza el programa sin error...
+    return 0 #Finaliza el programa sin error...
 #############################################################################-
 ############################### PROGRAMA ####################################-
 #############################################################################-
