@@ -8,7 +8,7 @@ def CrearTabla (bdd, nombre):
     #Crea anotador (tabla) de puntaje en una base de datos, con el nombre dado.
 
    bdd.execute("""
-        CREATE TABLE IF NOT EXISTS """ '\'' + str(nombre) + '\''  """ (
+        CREATE TABLE IF NOT EXISTS """ '\'' + str(nombre) + '\'' """ (
     	'ID' INTEGER PRIMARY KEY AUTOINCREMENT,
     	'Turno' INTEGER,
     	'Nombre' TEXT,
@@ -26,6 +26,14 @@ def CrearTabla (bdd, nombre):
         );
                     """)
 
+def LeerTabla (bdd, nombre):
+    bdd.execute('SELECT * FROM '+str(nombre))
+
+def EscribirTabla (bdd,lista):
+    #Crea un registro y escribe una lista de datos ordenados en el mismo.
+
+    #"INSERT INTO " + '\'' +str(nombre)+ '\' + ({,,,TABLA ORDENADA,,,}) VALUES ()  '
+    a=0
 
 directorio_local= str(sys.path[0])          # Directorio local donde se aloja el programa.
 nombre_archivo_bdd= 'BDD_Generala.db'       # Nombre del archivo de la BDD
@@ -37,7 +45,9 @@ print('bdd = '+str(directorio_local+'\\'+nombre_archivo_bdd))
 print('bdd = '+str(bdd))
 
 nombre='Partida_1'
+
 CrearTabla(bdd_actual,nombre)
-bdd_actual.execute(" SELECT * FROM "+str(nombre))
+
+LeerTabla(bdd_actual,nombre)
 
 print('Contenido BDD:\n\n'+str(bdd_actual.fetchall()))  #Lee toda la tabla

@@ -1,6 +1,8 @@
 import random
 import sys
 
+import BDD_Generala
+
 dicc_anotador = { # Nombre diccionario / ubicación en la lista.)
     'Nombre':   0,
     'Turno':    1,
@@ -233,7 +235,8 @@ def NuevaPartida():
     return tabla_jugadores
 
 def CargarPartida():
-    a=0
+    nombre='Partida_1'
+    return BDD_Generala.LeerTabla(nombre)
 
 def PedirJugadores ():
 
@@ -371,10 +374,8 @@ def MenuPrincipal():
 
 #DebugPrint('Turno_Jugador: '+str(Turno_Jugador(1)))
 
-#CorrerJuego(NuevaPartida())
 #ArmarTablaPuntajes(['Jugador 1','Jugador 2','Jugador 3'])
 
 
-#CorrerJuego(NuevaPartida())
-print(str(sys.path[0]))
+CorrerJuego(NuevaPartida())
 
