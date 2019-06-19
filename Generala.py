@@ -62,7 +62,7 @@ def Tirar_Dados(j, d_n):
 
     if d_n != 0:    #Si no se le ingresa un valor incorrecto...
         contador=0
-        for var in d_n:             # Convierte cada elemento de la lista de formato "string" a formato "int".
+        for var in d_n:            # Convierte cada elemento de la lista de formato "string" a formato "int".
             d_n[contador]=int(var)
             contador=contador+1
         # DebugPrint('d_n='+str(d_n))
@@ -79,7 +79,8 @@ def Tirar_Dados(j, d_n):
         #         # todo: ejemplo: 1,2,4 -> [1,2,4,0,0]
 
         for dado in d_n:
-            j[dado-1] = (random.randrange(1, 7))  # Lanza dado y reemplaza el valor anterior.
+            if dado != int(0):
+                j[dado-1] = (random.randrange(1, 7))  # Lanza dado y reemplaza el valor anterior.
 
     return j
 
@@ -112,7 +113,7 @@ def Elegir_dados():
     ingreso_ok = 1  #Inicializo variable
     dados = []
 
-    dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: '))
+    dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: \n\n'))
     dados = dados.split(',')  # Genera lista con los dados
     # DebugPrint('dados='+str(dados))
 #    DebugPrint('len(dados)='+str(len(dados)))
@@ -168,23 +169,37 @@ def Turno_Jugador(puntaje):
 
     # Permite hacer los 3 tiros al jugador, y elegir qué dados volver a tirar...
     # todo: PERMITIR PLANTARSE AHÍ Y NO SEGUIR TIRANDO!! -> Se puede poner "0" al seleccionar dados a relanzar y listo...
+    fin_turno=0
     contador_tiros=0
     dados_relanzados=[1,2,3,4,5]    # Inicializo variable, para que lance todos los dados.
-    while contador_tiros < 2:  # Ejecuta 2 veces, inciando desde 2.
 
-        jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
-        print('   Tiro ' + str(contador_tiros+1) + ': ' + str(jugada))  # Muestra los dados
+    jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
+    print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
+
+    while contador_tiros < 2 and fin_turno==0:  # Ejecuta 2 veces, inciando desde 2.
+
+        contador_tiros = contador_tiros + 1  # Incrementa contador.
 
         dados_relanzados=0
         while dados_relanzados == int(0):
             dados_relanzados = Elegir_dados()
-            #DebugPrint('dados_relanzados=' + str(dados_relanzados))
+            DebugPrint('dados_relanzados=' + str(dados_relanzados))
             if dados_relanzados[0] == 0:        #Si no se ingresa nada...
                 a=0 # Dar aviso de error.
             elif dados_relanzados[0] == '0':
-                contador_tiros=4
+               # dados_relanzados=[0,0,0,0,0]
+                fin_turno=1
 
-        contador_tiros = contador_tiros + 1  # Incrementa contador.
+        jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
+        print('   Tiro ' + str(contador_tiros+1) + ': ' + str(jugada))  # Muestra los dados
+
+
+
+
+
+
+    #jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los últimos dados...
+    #print('Último tiro: ' + str(jugada))  # Muestra los últimos dados.
 
     puntaje = Determinar_jugadas(Cantidad_por_numero(jugada))
 
