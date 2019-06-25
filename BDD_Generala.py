@@ -29,13 +29,12 @@ def CrearTabla (bdd, nombre):
                     """)
 
 
-def LeerTabla (bdd, nombre):
-    bdd.execute('SELECT * FROM '+str(nombre))
+def LeerTabla (bdd, nombretabla):
+    bdd.execute('SELECT * FROM '+str(nombretabla))
 
 
 def EscribirTabla (bdd,nombre,lista):
     #Crea un registro y escribe una lista de datos ordenados en el mismo.
-
 
     # print('DEBUG: lista[0] = ' + str(lista[0]))
     # print('DEBUG: lista[-1] = ' + str(lista[-1]))
@@ -46,7 +45,7 @@ def EscribirTabla (bdd,nombre,lista):
         print('DEBUG: lista = ' + str(lista))
 
         bdd.execute("""
-        INSERT INTO """ '\''+str(nombre)+'\''""" ('ID','Turno','Nombre','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
+        INSERT INTO """ '\''+str(nombre)+'\''""" ('ID','Nombre','Turno','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
         """+ str(lista) + ';' """
         """)
 

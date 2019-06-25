@@ -166,7 +166,7 @@ def Turno_Jugador(puntaje):
     # no dar posibilidad de sobreescribirlo.
     # Además, si el jugador hizo uno o más tiros y salió del juego, esto queda guardado en su "status", por
     # lo cual esto permite evitar que salga y vuelva a entrar al juego para repetir su turno "desde cero".
-    # todo ver posiblildad de hacerla compatible con la generala servida.
+    # todo: ver posiblildad de hacerla compatible con la generala servida.
 
     ######################### Recibe el nombre del jugador, y extrae el puntaje con el mismo. ##########################
 
@@ -199,13 +199,9 @@ def Turno_Jugador(puntaje):
             elif dados_relanzados[0] == '0':        #todo: Hacer algo para evitar que si el resultado de Elegir_dados da 0 (error) no entre al if que accede a la posicion [0, ya que esto no es posible.
                # dados_relanzados=[0,0,0,0,0]
                 fin_turno=1
-
-        jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
-        print('   Tiro ' + str(contador_tiros+1) + ': ' + str(jugada))  # Muestra los dados
-
-
-
-
+            else:                   # Si se ingresó correctamente uno o más dados..
+                jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
+                print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
 
 
     #jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los últimos dados...
@@ -217,8 +213,12 @@ def Turno_Jugador(puntaje):
     # todo: Función para leer puntaje. Menú para mostrar posibliidades y elegir una.
     # todo: puntaje=ElegirJugada ...
 
-    print('\nJugada armada: ' + str(puntaje))  # Determina qué jugada logró armar el jugador luego de sus tres tiros.
-
+    print('\nElija la jugada a anotar:')  # Determina qué jugada logró armar el jugador luego de sus tres tiros.
+    cn=1
+    for aux in puntaje:
+        if aux[1] != 0:
+            print(str(cn)+': '+str(aux))
+            cn = cn + 1
                     #todo: sumar 5 si "contador_tiros" indica que solo se tiró una vez.
                     #todo: hacer que se indique si fue una jugada servida, ya que en caso se ser generala doble, el jugador gana.
                     #todo: -> Esto se podría hacer así: Si es jugada especial y el puntaje termina en 5, y era Generala, y ya
