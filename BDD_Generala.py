@@ -8,8 +8,9 @@ import sys          # Para obtener el directorio actual, y para acceder a la hor
 def CrearTabla (bdd, nombre):
     #Crea anotador (tabla) de puntaje en una base de datos, con el nombre dado.
 
+                    # IF NOT EXISTS
    bdd.execute("""
-        CREATE TABLE IF NOT EXISTS """ '\'' + str(nombre) + '\'' """ (
+        CREATE TABLE  """ '\'' + str(nombre) + '\'' """ (
     	'ID' INTEGER PRIMARY KEY AUTOINCREMENT,
     	'Turno' INTEGER,
     	'Nombre' TEXT,
@@ -27,24 +28,30 @@ def CrearTabla (bdd, nombre):
         );
                     """)
 
+
 def LeerTabla (bdd, nombre):
     bdd.execute('SELECT * FROM '+str(nombre))
+
 
 def EscribirTabla (bdd,nombre,lista):
     #Crea un registro y escribe una lista de datos ordenados en el mismo.
 
-    print('DEBUG: lista = ' + str(lista))
+
     # print('DEBUG: lista[0] = ' + str(lista[0]))
     # print('DEBUG: lista[-1] = ' + str(lista[-1]))
 
     if len(lista) >= 13:    #Puede o no tener campo de PK
-        #bdd.execute()
+        lista=tuple(lista)  # Transforma la lista a una tupla, para convertir los corchetes a paréntesis
+                            # y hacer así una instrucción compatible ocn la base de datos.
+        print('DEBUG: lista = ' + str(lista))
+
         bdd.execute("""
-        INSERT INTO """ '\''+str(nombre)+'\''""" ('Turno','Nombre','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
+        INSERT INTO """ '\''+str(nombre)+'\''""" ('ID','Turno','Nombre','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
         """+ str(lista) + ';' """
         """)
 
     bdd_actual.commit()
+
 
 def IniciarBDD (directorio, nombreBDD):
     #Recibe el directorio y el nombre de la base de datos.
@@ -60,7 +67,6 @@ def IniciarBDD (directorio, nombreBDD):
     return bdd
 
 
-
 directorio_local= str(sys.path[0])          # Directorio local donde se aloja el programa.
 
 bdd_actual=0 #Indica que no hay BDD abierta
@@ -68,7 +74,6 @@ bdd_actual=IniciarBDD(directorio_local, 'BDD_Generala.db')  #Se conecta a la bas
 bdd_cursor= bdd_actual.cursor()  # Asigna el cursor.
 
 nombre_partida='Partida_1'
-
 
 
 # EscribirTabla(bdd_cursor,'Partida_1',tuple([1,'BRUNO',1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]))

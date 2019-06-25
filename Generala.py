@@ -4,23 +4,25 @@ import sys
 import BDD_Generala
 
 dicc_anotador = { # Nombre diccionario / ubicación en la lista.)
-    'Nombre':   0,
-    'Turno':    1,
-    '1':        2,
-    '2':        3,
-    '3':        4,
-    '4':        5,
-    '5':        6,
-    '6':        7,
-    'Escalera': 8,
-    'Full':     9,
-    'Poker':    10,
-    'Generala': 11,
-    '2Generala':12
+    'ID':       0,
+    'Nombre':   1,
+    'Turno':    2,
+    '1':        3,
+    '2':        4,
+    '3':        5,
+    '4':        6,
+    '5':        7,
+    '6':        8,
+    'Escalera': 9,
+    'Full':     10,
+    'Poker':    11,
+    'Generala': 12,
+    '2Generala':13
 }
 
 
 puntajes_jugador = []
+
 
 def Cantidad_por_numero(jugada):
     # [Nombre]['1','2','3','4','5','6','Escalera','Full','Poker','Generala','2Generala']
@@ -31,6 +33,7 @@ def Cantidad_por_numero(jugada):
         lista[i - 1] = lista[i - 1] + 1  # Suma 1 a la posición que corresponde al número posible (1 al 6).
     # print('<DEBUG>:lista= '+str(lista))
     return lista
+
 
 def Determinar_jugadas(conjuntos):
     # Se le ingresa un numero de apariciones por numero y devuelve
@@ -55,6 +58,7 @@ def Determinar_jugadas(conjuntos):
         cont = cont + 1
 
     return list(resultado)  # Devuelve en formato lista, qué jugadas se forman (primero las especiales y luego las simples.
+
 
 def Tirar_Dados(j, d_n):
     # Recibe una jugada (estado inicial de los dados) y distintas posiciones de dados (d_n -> 1 <= n <= 5)
@@ -84,21 +88,25 @@ def Tirar_Dados(j, d_n):
 
     return j
 
+
 def OrdenarDados(dados):
     # Ordena los dados de mayor a menor, de izquierda a derecha.
 
     dados.sort(reverse=True)  # Ordena los elementos de mayor a menor, colocándolos de izquierda a derecha.
     return dados
 
+
 def DebugPrint(mensaje):
     # Coloca la leyenda "<DEBUG>:" y luego un valor o mensaje convertido a formato string, mostrándolo en pantalla.
     print('<DEBUG>:' + str(mensaje))
+
 
 def MensajeError(mensaje, wait):
     print('\n### ERROR ###: ' + str(mensaje))
     if wait == 1:
         print('Presione <ENTER> para continuar... ')
         input() #Espera a que se presione <ENTER>...
+
 
 def Elegir_dados():
     # Ingresar hasta 5 posiciones separadas por coma (',').
@@ -151,6 +159,7 @@ def Elegir_dados():
     elif ingreso_ok==1:
         dados.sort(reverse=False)  # ordena los elementos de menor a mayor.
         return dados                # Devuelve lista como resultado de la función.
+
 
 def Turno_Jugador(puntaje):
     # Recibe de qué jugador es el turno, para saber qué posiciones de puntajes ya tiene utilizadas, y así
@@ -219,6 +228,7 @@ def Turno_Jugador(puntaje):
     puntaje_final = puntaje           # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
     return puntaje_final
 
+
 def NuevaPartida():
     # Borrar pantalla.
     print('     Nueva partida:\n\n')
@@ -243,7 +253,6 @@ def NuevaPartida():
 
     BDD_Generala.CrearTabla(cursor, nombre_partida)        #Crea tabla (si no existe) con el nombre dado.
     tabla_jugadores=ArmarTablaPuntajes(lista_jugadores)
-
     for registro in tabla_jugadores:
         BDD_Generala.EscribirTabla(cursor,nombre_partida,registro)
 
@@ -256,9 +265,11 @@ def NuevaPartida():
 
     return tabla_jugadores
 
+
 def CargarPartida():
     nombre='Partida_1'
     return BDD_Generala.LeerTabla(nombre)
+
 
 def PedirIngresoJugadores ():
 
@@ -286,6 +297,7 @@ def PedirIngresoJugadores ():
     # DebugPrint('lista_jugadores= '+str(lista_jugadores))
     return lista_jugadores
 
+
 def ArmarTablaPuntajes (jugadores):
     # Arma una lista con los jugadores y sus posibles puntajes, incializados todos en int(0).
     # Los puntajes se deben almacenar en formato string; de haber uno en formato int (como el 0 inicial),
@@ -310,6 +322,7 @@ def ArmarTablaPuntajes (jugadores):
     #DebugPrint('anotador = ' + str(anotador))
 
     return anotador
+
 
 def CorrerJuego (tabla_puntajes):
     # El juego siempre se desarrolla a partir de una tabla; la cual incluye en una de las posiciones, el número
@@ -352,6 +365,7 @@ def AnotarPuntaje (anotador, jugador, valor):
     # donde se va anotar (números o jugadas especiales), mas el valor del puntaje a anotar.
 
     return anotador
+
 
 def SalirJuego():
     #Sale del juego.
