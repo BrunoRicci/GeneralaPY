@@ -72,13 +72,6 @@ def Tirar_Dados(j, d_n):
         # DebugPrint('d_n='+str(d_n))
         # DebugPrint('len(d_n)='+str(len(d_n)))
 
-        # ##Puede que haya que sacarlo...
-        # while len(d_n) < len(j):      #Hace que el largo de la lista "d_n" sea igual al de "j", agregando elementos al final de esta.
-        #     d_n.append(0)
-        #
-        # for contador in range(0, len(j)):
-        #     if d_n[contador] == contador + 1:  # Si coincide el numero (dado seleccionado)...
-        #         j[contador] = (random.randrange(1, 7))  # Lanza dado y reemplaza el valor anterior.
         #         # todo: Hacer que en la función de ElegirDados ponga los elementos de la lista que no se usan en 0.
         #         # todo: ejemplo: 1,2,4 -> [1,2,4,0,0]
 
@@ -171,7 +164,6 @@ def Turno_Jugador(puntaje):
     ######################### Recibe el nombre del jugador, y extrae el puntaje con el mismo. ##########################
 
     jugada = [0, 0, 0, 0, 0]  # Inicializo la lista "jugada" con todos en 0...
-    jugada = OrdenarDados(Tirar_Dados(jugada, [1, 2, 3, 4, 5]))  # Tira todos los dados.
 
     print('- - - - -   TURNO DE '+str(puntaje[dicc_anotador['Nombre']])+'   - - - - -\n')
    # print('   Tiro 1: ' + str(jugada)+'\n')  # Muestra los dados
@@ -184,7 +176,7 @@ def Turno_Jugador(puntaje):
     jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
     print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
 
-    while contador_tiros < 2 and fin_turno==0:  # Ejecuta 2 veces, inciando desde 2.
+    while contador_tiros < 2 and fin_turno == 0:  # Ejecuta 2 veces, inciando desde 2.
 
         contador_tiros = contador_tiros + 1  # Incrementa contador.
 
@@ -204,15 +196,6 @@ def Turno_Jugador(puntaje):
                 print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
 
 
-    #jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los últimos dados...
-    #print('Último tiro: ' + str(jugada))  # Muestra los últimos dados.
-
-    puntaje = Determinar_jugadas(Cantidad_por_numero(jugada))
-
-    # todo: VER PUNTAJE ACTUAL DEL JUGADOR Y PERMITIR ELEGIR EN QUÉ CASILLERO SE QUIERE ANOTAR LOS PUNTOS.
-    # todo: Función para leer puntaje. Menú para mostrar posibliidades y elegir una.
-    # todo: puntaje=ElegirJugada ...
-
     print('\nElija la jugada a anotar:')  # Determina qué jugada logró armar el jugador luego de sus tres tiros.
     cn=1
     for aux in puntaje:
@@ -225,7 +208,15 @@ def Turno_Jugador(puntaje):
                     #todo: había salido (generala doble) entonces es generala doble servida.
                                 # todo: Para acceder al anotador:    if anotador[jugador][cont] == int(0): lista_aux.append(cont)
                                 # todo: busca qué posiciones están en 0 (sin anotar) y las guarda en una lista auxiliar.
-    puntaje_final = puntaje           # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
+       # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
+
+    puntaje = Determinar_jugadas(Cantidad_por_numero(jugada))
+
+    # todo: VER PUNTAJE ACTUAL DEL JUGADOR Y PERMITIR ELEGIR EN QUÉ CASILLERO SE QUIERE ANOTAR LOS PUNTOS.
+    # todo: Función para leer puntaje. Menú para mostrar posibliidades y elegir una.
+    # todo: puntaje=ElegirJugada ...
+
+    puntaje_final = puntaje
     return puntaje_final
 
 
@@ -261,7 +252,7 @@ def NuevaPartida():
 
 def CargarPartida():
     nombre='Partida_1'
-    return BDD_Generala.LeerTabla(BDD_Generala.bdd_actual,nombre)
+    return BDD_Generala.LeerTabla(BDD_Generala.bdd_cursor,nombre)
 
 
 def PedirIngresoJugadores ():
@@ -325,14 +316,8 @@ def CorrerJuego (tabla_puntajes):
     finalizar_ronda = 0    # Inicializo variable
     num_ronda = 0   # todo: A esta variable hay que asignarle el valor actual de la partida.
                     # todo: Hacer función que lea el anotador y vea cuántos casilleros tienen marcados exclusivamente TODOS los jugadores, para obtenerlo.
-    # todo: Obtener numero de turno de jugador. -> Leyendo la columna ""
+    # todo: Obtener numero de turno de jugador. -> Leyendo la columna "Nombre"
 
-    ObtenerTurnoJugador(tabla_puntajes)     # Obtiene el turno del jugador correspondiente. Para saber
-                                            # qué número de tiro, se debe utlizar otra función, o hacer que
-                                            # devuelva una lista con el N° de jugador y el numero de tiro.
-
-    #todo:  Obtiene nombres de todos los jugadores de la tabla.
-    lista_jugadores = []
 
 
     DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
@@ -340,11 +325,12 @@ def CorrerJuego (tabla_puntajes):
     # DebugPrint('type tabla_puntajes: '+str(type(tabla_puntajes)))
     # DebugPrint('len(tabla_puntajes) = '+str(len(tabla_puntajes)))
 
-
     while num_ronda < 11 or finalizar_ronda != 1:
-        jugador = 0  # Inicializo variable de turno de jugador -> todo: Leer el numero de turno desde el anotador.
+        jugador = ObtenerTurnoJugador(tabla_puntajes)   # Obtiene el turno del jugador correspondiente. Para saber
+                                                        # qué número de tiro, se debe utlizar otra función, o hacer que
+                                            # devuelva una lista con el N° de jugador y el numero de tiro.
 
-        while jugador < (cantidad_jugadores):        # Recorre los turnos hasta que se termine la ronda...
+        while jugador < cantidad_jugadores :        # Recorre los turnos hasta que se termine la ronda...
             puntaje=Turno_Jugador(tabla_puntajes[jugador])      # Inicia el turno del jugador...
 
             if puntaje != 'FIN':
@@ -368,6 +354,9 @@ def ObtenerTurnoJugador (anotador):
 
     return jugador_actual   #Devuelve el ID de jugador.
 
+def ObtenerRonda (anotador):
+    # Busca en el anotador la cantidad de filas (jugadores) que hay con valores distintos a -1 (utilizados).
+    a=0
 
 
 
@@ -375,6 +364,9 @@ def AnotarPuntaje (anotador, jugador, valor):
     # En un determinado anotador (tabla formada por listas), selecciona la lista de un jugador, y le anota un puntaje en
     # la posición indicada. La posición se encuentra por diccionario, ya que la variable "valor" es una lista con la jugada
     # donde se va anotar (números o jugadas especiales), mas el valor del puntaje a anotar.
+
+    posicion = valor[0]
+    anotador[jugador][dicc_anotador[posicion]] = valor[1]     #Pone el valor numérico en la posición del puntaje.
 
     return anotador
 
