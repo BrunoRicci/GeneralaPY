@@ -177,7 +177,6 @@ def Turno_Jugador(puntaje):
    # print('   Tiro 1: ' + str(jugada)+'\n')  # Muestra los dados
 
     # Permite hacer los 3 tiros al jugador, y elegir qué dados volver a tirar...
-    # todo: PERMITIR PLANTARSE AHÍ Y NO SEGUIR TIRANDO!! -> Se puede poner "0" al seleccionar dados a relanzar y listo...
     fin_turno=0
     contador_tiros=0
     dados_relanzados=[1,2,3,4,5]    # Inicializo variable, para que lance todos los dados.
@@ -192,12 +191,13 @@ def Turno_Jugador(puntaje):
         dados_relanzados=0
         while dados_relanzados == int(0):
             dados_relanzados = Elegir_dados()
-            #DebugPrint('dados_relanzados=' + str(dados_relanzados))
+            # DebugPrint('dados_relanzados=' + str(dados_relanzados))
 
-            if dados_relanzados[0] == 0:        #Si no se ingresa nada...
-                a=0 # Dar aviso de error.
-            elif dados_relanzados[0] == '0':        #todo: Hacer algo para evitar que si el resultado de Elegir_dados da 0 (error) no entre al if que accede a la posicion [0, ya que esto no es posible.
-               # dados_relanzados=[0,0,0,0,0]
+            # if dados_relanzados[0] == 0:        #Si no se ingresa nada...
+            #     a=0 # Dar aviso de error.
+            # elif dados_relanzados[0] == '0':
+            if dados_relanzados[0] == '0':        #todo: Hacer algo para evitar que si el resultado de Elegir_dados da 0 (error) no entre al if que accede a la posicion [0, ya que esto no es posible.
+                # dados_relanzados = [0,0,0,0,0]
                 fin_turno=1
             else:                   # Si se ingresó correctamente uno o más dados..
                 jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
@@ -235,9 +235,9 @@ def NuevaPartida():
 
     lista_jugadores=PedirIngresoJugadores()        #Pide que se ingresen los jugadores.
     nombre_partida= BDD_Generala.nombre_partida
-    cursor=BDD_Generala.bdd_cursor
+    # cursor=BDD_Generala.bdd_cursor
 
-    print('Los jugadores son:')  # Imprime la lista de jugadores.
+    print('Los jusgadores son:')  # Imprime la lista de jugadores.
     for aux in lista_jugadores:
         print(aux)
 
@@ -251,24 +251,17 @@ def NuevaPartida():
     #         #Vuelve atrás... -> Llamar a la misma función?
     #         a=0
 
-    BDD_Generala.CrearTabla(cursor, nombre_partida)        #Crea tabla (si no existe) con el nombre dado.
+    BDD_Generala.CrearTabla(BDD_Generala.bdd_cursor, nombre_partida)        #Crea tabla (si no existe) con el nombre dado.
     tabla_jugadores=ArmarTablaPuntajes(lista_jugadores)
     for registro in tabla_jugadores:
-        BDD_Generala.EscribirTabla(cursor,nombre_partida,registro)
-
-    #todo: GRABAR TABLA GENERADA EN BASE DE DATOS.
-    #todo: Hacer función que reciba tabla (verificar que sea información úttil por las dudas) y
-    #todo: y la guarde en BDD.
-
-    #todo: Si la tabla se genera correctamente, avanza y la dewuelve como resultado de esta función.
-    #todo: Si no, devuelve un int(0) (ERROR).
+        BDD_Generala.EscribirTabla(BDD_Generala.bdd_cursor,nombre_partida,registro)
 
     return tabla_jugadores
 
 
 def CargarPartida():
     nombre='Partida_1'
-    return BDD_Generala.LeerTabla(nombre)
+    return BDD_Generala.LeerTabla(BDD_Generala.bdd_actual,nombre)
 
 
 def PedirIngresoJugadores ():
@@ -334,11 +327,15 @@ def CorrerJuego (tabla_puntajes):
                     # todo: Hacer función que lea el anotador y vea cuántos casilleros tienen marcados exclusivamente TODOS los jugadores, para obtenerlo.
     # todo: Obtener numero de turno de jugador. -> Leyendo la columna ""
 
-    # Obtiene nombres de todos los jugadores de la tabla.
+    ObtenerTurnoJugador(tabla_puntajes)     # Obtiene el turno del jugador correspondiente. Para saber
+                                            # qué número de tiro, se debe utlizar otra función, o hacer que
+                                            # devuelva una lista con el N° de jugador y el numero de tiro.
+
+    #todo:  Obtiene nombres de todos los jugadores de la tabla.
     lista_jugadores = []
 
 
-    # DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
+    DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
     cantidad_jugadores=len(tabla_puntajes)
     # DebugPrint('type tabla_puntajes: '+str(type(tabla_puntajes)))
     # DebugPrint('len(tabla_puntajes) = '+str(len(tabla_puntajes)))
@@ -357,6 +354,21 @@ def CorrerJuego (tabla_puntajes):
                 finalizar_ronda = 1
 
         num_ronda=num_ronda+1   #Incrementa el numero de ronda.
+
+
+def ObtenerTurnoJugador (anotador):
+    jugador=0
+    jugador_actual=0
+    largo=len(anotador)     #Cantidad de jugadores
+
+    for lista in anotador:      #Poner centinela para no hacer el loop completo innecesariamente
+        jugador=jugador + 1
+        if lista[dicc_anotador['Turno']] >= 1:      #Si el el turno del jugador...
+            jugador_actual=lista[dicc_anotador['ID']]   #Guarda el ID (numero de jugador).
+
+    return jugador_actual   #Devuelve el ID de jugador.
+
+
 
 
 def AnotarPuntaje (anotador, jugador, valor):
@@ -418,5 +430,5 @@ def MenuPrincipal():
 #ArmarTablaPuntajes(['Jugador 1','Jugador 2','Jugador 3'])
 
 
-CorrerJuego(NuevaPartida())
+CorrerJuego(CargarPartida())
 

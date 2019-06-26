@@ -7,10 +7,9 @@ import sys          # Para obtener el directorio actual, y para acceder a la hor
 
 def CrearTabla (bdd, nombre):
     #Crea anotador (tabla) de puntaje en una base de datos, con el nombre dado.
-
                     # IF NOT EXISTS
    bdd.execute("""
-        CREATE TABLE  """ '\'' + str(nombre) + '\'' """ (
+        CREATE TABLE IF NOT EXISTS """ '\'' + str(nombre) + '\'' """ (
     	'ID' INTEGER PRIMARY KEY AUTOINCREMENT,
     	'Turno' INTEGER,
     	'Nombre' TEXT,
@@ -31,9 +30,22 @@ def CrearTabla (bdd, nombre):
 
 def LeerTabla (bdd, nombretabla):
     bdd.execute('SELECT * FROM '+str(nombretabla))
+    print('leido: '+str(bdd.fetchall()))
+
+    return( bdd.fetchall() )
 
 
-def EscribirTabla (bdd,nombre,lista):
+def LeerPartidas (bdd):
+    # Recibe una base de datos, y busca todas las tablas que hay, devolviendo una lista de las mismas.
+
+    bdd.execute("""
+    SELECT name FROM sqlite_master WHERE type = "table";
+""")
+    # print('Tablas leídas: '+str(bdd.fetchall()))
+    return bdd.fetchall()
+
+
+def EscribirTabla (bdd, nombre, lista):
     #Crea un registro y escribe una lista de datos ordenados en el mismo.
 
     # print('DEBUG: lista[0] = ' + str(lista[0]))
@@ -73,6 +85,11 @@ bdd_actual=IniciarBDD(directorio_local, 'BDD_Generala.db')  #Se conecta a la bas
 bdd_cursor= bdd_actual.cursor()  # Asigna el cursor.
 
 nombre_partida='Partida_1'
+
+
+
+####################### Pruebas ###########################
+# LeerPartidas(bdd_cursor)
 
 
 # EscribirTabla(bdd_cursor,'Partida_1',tuple([1,'BRUNO',1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]))
