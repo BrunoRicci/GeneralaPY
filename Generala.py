@@ -5,8 +5,8 @@ import BDD_Generala
 
 dicc_anotador = { # Nombre diccionario / ubicación en la lista.)
     'ID':       0,
-    'Nombre':   1,
-    'Turno':    2,
+    'Turno':    1,
+    'Nombre':   2,
     '1':        3,
     '2':        4,
     '3':        5,
@@ -72,8 +72,8 @@ def Tirar_Dados(j, d_n):
         # DebugPrint('d_n='+str(d_n))
         # DebugPrint('len(d_n)='+str(len(d_n)))
 
-        #         # todo: Hacer que en la función de ElegirDados ponga los elementos de la lista que no se usan en 0.
-        #         # todo: ejemplo: 1,2,4 -> [1,2,4,0,0]
+        #        # todo: Hacer que en la función de ElegirDados ponga los elementos de la lista que no se usan en 0.
+        #        # todo: ejemplo: 1,2,4 -> [1,2,4,0,0]
 
         for dado in d_n:
             if dado != int(0):
@@ -195,29 +195,35 @@ def Turno_Jugador(puntaje):
                 jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
                 print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
 
-
+    puntaje = Determinar_jugadas(Cantidad_por_numero(jugada))
     print('\nElija la jugada a anotar:')  # Determina qué jugada logró armar el jugador luego de sus tres tiros.
     cn=1
-    for aux in puntaje:
-        if aux[1] != 0:
-            print(str(cn)+': '+str(aux))
-            cn = cn + 1
+    for aux in puntaje:     # Recorre los puntajes logrados...
+        if aux[1] != 0:     # Mientras el puntaje a esa jugada fue mayor a cero...
+            print(str(cn)+': '+str(aux))    # Muestra el puntaje.
+            cn = cn + 1         # Incrementa el contador.
                     #todo: sumar 5 si "contador_tiros" indica que solo se tiró una vez.
                     #todo: hacer que se indique si fue una jugada servida, ya que en caso se ser generala doble, el jugador gana.
                     #todo: -> Esto se podría hacer así: Si es jugada especial y el puntaje termina en 5, y era Generala, y ya
                     #todo: había salido (generala doble) entonces es generala doble servida.
                                 # todo: Para acceder al anotador:    if anotador[jugador][cont] == int(0): lista_aux.append(cont)
                                 # todo: busca qué posiciones están en 0 (sin anotar) y las guarda en una lista auxiliar.
-       # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
-
-    puntaje = Determinar_jugadas(Cantidad_por_numero(jugada))
-
+            # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
+    aux=0
+    while not (int(aux) > 0  and int(aux) < cn):
+        aux=int(input())
+        # if type(aux) != type(str('')):   # Si no es un caracter (es un número)...
+        #     aux=int(aux)
+        # else:
+        #     aux=0
+        # DebugPrint('aux = '+str(aux))
+    puntaje = puntaje[aux]  # Guarda el
     # todo: VER PUNTAJE ACTUAL DEL JUGADOR Y PERMITIR ELEGIR EN QUÉ CASILLERO SE QUIERE ANOTAR LOS PUNTOS.
     # todo: Función para leer puntaje. Menú para mostrar posibliidades y elegir una.
     # todo: puntaje=ElegirJugada ...
 
-    puntaje_final = puntaje
-    return puntaje_final
+    DebugPrint('puntaje = '+str(puntaje))
+    return puntaje
 
 
 def NuevaPartida():
@@ -252,8 +258,17 @@ def NuevaPartida():
 
 def CargarPartida():
     nombre='Partida_1'
-    return BDD_Generala.LeerTabla(BDD_Generala.bdd_cursor,nombre)
+    # Obtiene el anotador (tabla de puntos) y lo pasa a tipo lista.
+    tabla = CastearALista(BDD_Generala.LeerTabla(BDD_Generala.bdd_cursor,nombre))
 
+    return tabla
+
+
+def CastearALista (tupla):
+    for aux in tupla:
+        tupla[tupla.index(aux)]=list(aux)   # Elige el elemento en la posición de "aux" y lo castea a tipo "list".
+
+    return tupla
 
 def PedirIngresoJugadores ():
 
@@ -316,8 +331,7 @@ def CorrerJuego (tabla_puntajes):
     finalizar_ronda = 0    # Inicializo variable
     num_ronda = 0   # todo: A esta variable hay que asignarle el valor actual de la partida.
                     # todo: Hacer función que lea el anotador y vea cuántos casilleros tienen marcados exclusivamente TODOS los jugadores, para obtenerlo.
-    # todo: Obtener numero de turno de jugador. -> Leyendo la columna "Nombre"
-
+                    # todo: Obtener numero de turno de jugador. -> Leyendo la columna "Nombre"
 
 
     DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
@@ -331,7 +345,7 @@ def CorrerJuego (tabla_puntajes):
                                             # devuelva una lista con el N° de jugador y el numero de tiro.
 
         while jugador < cantidad_jugadores :        # Recorre los turnos hasta que se termine la ronda...
-            puntaje=Turno_Jugador(tabla_puntajes[jugador])      # Inicia el turno del jugador...
+            puntaje=Turno_Jugador(tabla_puntajes[jugador-1])  # Inicia el turno del jugador... el -1 es xq empieza en 0.
 
             if puntaje != 'FIN':
                 tabla_puntajes=AnotarPuntaje(tabla_puntajes,jugador,puntaje)       # Anota el puntaje.
@@ -349,10 +363,13 @@ def ObtenerTurnoJugador (anotador):
 
     for lista in anotador:      #Poner centinela para no hacer el loop completo innecesariamente
         jugador=jugador + 1
-        if lista[dicc_anotador['Turno']] >= 1:      #Si el el turno del jugador...
+        if int(lista[dicc_anotador['Turno']]) >= 1:      #Si el el turno del jugador...
             jugador_actual=lista[dicc_anotador['ID']]   #Guarda el ID (numero de jugador).
 
+    DebugPrint('jugador_actual: '+str(jugador_actual))
+
     return jugador_actual   #Devuelve el ID de jugador.
+
 
 def ObtenerRonda (anotador):
     # Busca en el anotador la cantidad de filas (jugadores) que hay con valores distintos a -1 (utilizados).
@@ -365,9 +382,8 @@ def AnotarPuntaje (anotador, jugador, valor):
     # la posición indicada. La posición se encuentra por diccionario, ya que la variable "valor" es una lista con la jugada
     # donde se va anotar (números o jugadas especiales), mas el valor del puntaje a anotar.
 
-    posicion = valor[0]
-    anotador[jugador][dicc_anotador[posicion]] = valor[1]     #Pone el valor numérico en la posición del puntaje.
-
+    # Coloca en la posición incicada (en cuál de todos los puntajes) el valor numérico del puntaje.
+    anotador[jugador][dicc_anotador[str(valor[0])]] = valor[1]     #Pone el valor numérico en la posición del puntaje.
     return anotador
 
 

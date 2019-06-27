@@ -30,7 +30,7 @@ def CrearTabla (bdd, nombre):
 
 def LeerTabla (bdd, nombretabla):
     bdd.execute('SELECT * FROM '+str(nombretabla))
-    print('leido: '+str(bdd.fetchall()))
+    # print('leido: '+str(bdd.fetchall()))
 
     return( bdd.fetchall() )
 
