@@ -222,6 +222,8 @@ def Turno_Jugador(puntaje):
     # todo: Función para leer puntaje. Menú para mostrar posibliidades y elegir una.
     # todo: puntaje=ElegirJugada ...
 
+    #todo: PONER EN 0 EL TURNO DE ESTE JUGADOR Y EN 1 EL TURNO DEL PRÓXIMO!!!!
+
     DebugPrint('puntaje = '+str(puntaje))
     return puntaje
 
