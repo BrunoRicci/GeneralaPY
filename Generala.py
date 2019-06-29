@@ -195,20 +195,17 @@ def Turno_Jugador(puntaje):
                 jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
                 print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
 
-    puntaje = Determinar_jugadas(Cantidad_por_numero(jugada))
+    puntaje = Determinar_jugadas(Cantidad_por_numero(jugada))   # Determina qué jugadas (especiales o no) se lograron.
+
     print('\nElija la jugada a anotar:')  # Determina qué jugada logró armar el jugador luego de sus tres tiros.
+    lista_puntaje=[]
     cn=1
     for aux in puntaje:     # Recorre los puntajes logrados...
         if aux[1] != 0:     # Mientras el puntaje a esa jugada fue mayor a cero...
             print(str(cn)+': '+str(aux))    # Muestra el puntaje.
+            lista_puntaje.append(aux)
             cn = cn + 1         # Incrementa el contador.
-                    #todo: sumar 5 si "contador_tiros" indica que solo se tiró una vez.
-                    #todo: hacer que se indique si fue una jugada servida, ya que en caso se ser generala doble, el jugador gana.
-                    #todo: -> Esto se podría hacer así: Si es jugada especial y el puntaje termina en 5, y era Generala, y ya
-                    #todo: había salido (generala doble) entonces es generala doble servida.
-                                # todo: Para acceder al anotador:    if anotador[jugador][cont] == int(0): lista_aux.append(cont)
-                                # todo: busca qué posiciones están en 0 (sin anotar) y las guarda en una lista auxiliar.
-            # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
+
     aux=0
     while not (int(aux) > 0  and int(aux) < cn):
         aux=int(input())
@@ -217,12 +214,27 @@ def Turno_Jugador(puntaje):
         # else:
         #     aux=0
         # DebugPrint('aux = '+str(aux))
-    puntaje = puntaje[aux]  # Guarda el
+    puntaje = lista_puntaje[aux-1]  # Guarda el
+
+    # todo: sumar 5 si "contador_tiros" indica que solo se tiró una vez.
+    # todo: hacer que se indique si fue una jugada servida, ya que en caso se ser generala doble, el jugador gana.
+    # todo: -> Esto se podría hacer así: Si es jugada especial y el puntaje termina en 5, y era Generala, y ya
+    # todo: había salido (generala doble) entonces es generala doble servida.
+    # todo: Para acceder al anotador:    if anotador[jugador][cont] == int(0): lista_aux.append(cont)
+    # todo: busca qué posiciones están en 0 (sin anotar) y las guarda en una lista auxiliar.
+    # todo: Hacer función para ver jugadas ya utilizadas y elegir dónde anotar los puntos,
+
     # todo: VER PUNTAJE ACTUAL DEL JUGADOR Y PERMITIR ELEGIR EN QUÉ CASILLERO SE QUIERE ANOTAR LOS PUNTOS.
     # todo: Función para leer puntaje. Menú para mostrar posibliidades y elegir una.
     # todo: puntaje=ElegirJugada ...
 
-    #todo: PONER EN 0 EL TURNO DE ESTE JUGADOR Y EN 1 EL TURNO DEL PRÓXIMO!!!!
+    # todo: PONER EN 0 EL TURNO DE ESTE JUGADOR Y EN 1 EL TURNO DEL PRÓXIMO!!!!
+
+    # BUG: AL SELECCIONAR UNA JUGADA, SE SELECCIONA DE LA LISTA DE JUGADAS COMPLETA, incluyendo lsa jugadas con valor
+    # nulo. Hacer lista nueva y guardar las válidas en esta, y elegir de lista_nueva[aux]. Esto sirve también para
+    # cuando haya jugadas ya utilizadas, la lista_nueva las va a filtrar.
+    # todo: Hacer opción para tachar otras jugadas.
+    # todo: mostrar la tabla de puntajes a un costado de la pantalla...
 
     DebugPrint('puntaje = '+str(puntaje))
     return puntaje
@@ -271,6 +283,7 @@ def CastearALista (tupla):
         tupla[tupla.index(aux)]=list(aux)   # Elige el elemento en la posición de "aux" y lo castea a tipo "list".
 
     return tupla
+
 
 def PedirIngresoJugadores ():
 
@@ -344,14 +357,21 @@ def CorrerJuego (tabla_puntajes):
     while num_ronda < 11 or finalizar_ronda != 1:
         jugador = ObtenerTurnoJugador(tabla_puntajes)   # Obtiene el turno del jugador correspondiente. Para saber
                                                         # qué número de tiro, se debe utlizar otra función, o hacer que
-                                            # devuelva una lista con el N° de jugador y el numero de tiro.
+                                                        # devuelva una lista con el N° de jugador y el numero de tiro.
 
         while jugador < cantidad_jugadores :        # Recorre los turnos hasta que se termine la ronda...
             puntaje=Turno_Jugador(tabla_puntajes[jugador-1])  # Inicia el turno del jugador... el -1 es xq empieza en 0.
 
-            if puntaje != 'FIN':
-                tabla_puntajes=AnotarPuntaje(tabla_puntajes,jugador,puntaje)       # Anota el puntaje.
-                jugador = jugador + 1
+            if puntaje != 'FIN':   # Si no finalizó la partida...
+                tabla_puntajes=ModificarAnotador(tabla_puntajes, jugador, puntaje)          # Anota el puntaje.
+                tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador, ['Turno', 0])   # Finaliza turno jugador actual.
+
+                if jugador < (cantidad_jugadores - 1):
+                    jugador = jugador + 1
+                else:
+                    jugador = 0
+
+                tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador, ['Turno', 1])   # Turno del próximo jugador.
             else:
                 finalizar_ronda = 1
 
@@ -373,13 +393,13 @@ def ObtenerTurnoJugador (anotador):
     return jugador_actual   #Devuelve el ID de jugador.
 
 
+
 def ObtenerRonda (anotador):
     # Busca en el anotador la cantidad de filas (jugadores) que hay con valores distintos a -1 (utilizados).
     a=0
 
 
-
-def AnotarPuntaje (anotador, jugador, valor):
+def ModificarAnotador (anotador, jugador, valor):
     # En un determinado anotador (tabla formada por listas), selecciona la lista de un jugador, y le anota un puntaje en
     # la posición indicada. La posición se encuentra por diccionario, ya que la variable "valor" es una lista con la jugada
     # donde se va anotar (números o jugadas especiales), mas el valor del puntaje a anotar.
