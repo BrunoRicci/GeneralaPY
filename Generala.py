@@ -1,5 +1,6 @@
 import random
 import sys
+import os
 
 import BDD_Generala
 
@@ -349,7 +350,7 @@ def CorrerJuego (tabla_puntajes):
                     # todo: Obtener numero de turno de jugador. -> Leyendo la columna "Nombre"
 
 
-    DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
+    # DebugPrint('tabla_puntajes = '+str(tabla_puntajes))
     cantidad_jugadores=len(tabla_puntajes)
     # DebugPrint('type tabla_puntajes: '+str(type(tabla_puntajes)))
     # DebugPrint('len(tabla_puntajes) = '+str(len(tabla_puntajes)))
@@ -361,17 +362,18 @@ def CorrerJuego (tabla_puntajes):
 
         while jugador < cantidad_jugadores :        # Recorre los turnos hasta que se termine la ronda...
             puntaje=Turno_Jugador(tabla_puntajes[jugador-1])  # Inicia el turno del jugador... el -1 es xq empieza en 0.
-
+            os.system('cls')
             if puntaje != 'FIN':   # Si no finalizó la partida...
-                tabla_puntajes=ModificarAnotador(tabla_puntajes, jugador, puntaje)          # Anota el puntaje.
-                tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador, ['Turno', 0])   # Finaliza turno jugador actual.
+                tabla_puntajes=ModificarAnotador(tabla_puntajes, jugador-1, puntaje)          # Anota el puntaje.
+                tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador-1, ['Turno', 0])   # Finaliza turno jugador actual.
 
                 if jugador < (cantidad_jugadores - 1):
                     jugador = jugador + 1
                 else:
                     jugador = 0
 
-                tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador, ['Turno', 1])   # Turno del próximo jugador.
+                tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador-1, ['Turno', 1])   # Turno del próximo jugador.
+                GuardarAnotador(BDD_Generala.bdd_actual,tabla_puntajes)    # Guarda el anotador en la BDD.
             else:
                 finalizar_ronda = 1
 
@@ -393,7 +395,6 @@ def ObtenerTurnoJugador (anotador):
     return jugador_actual   #Devuelve el ID de jugador.
 
 
-
 def ObtenerRonda (anotador):
     # Busca en el anotador la cantidad de filas (jugadores) que hay con valores distintos a -1 (utilizados).
     a=0
@@ -406,7 +407,13 @@ def ModificarAnotador (anotador, jugador, valor):
 
     # Coloca en la posición incicada (en cuál de todos los puntajes) el valor numérico del puntaje.
     anotador[jugador][dicc_anotador[str(valor[0])]] = valor[1]     #Pone el valor numérico en la posición del puntaje.
+    DebugPrint('    anotador:')
+    for aux in anotador:
+        DebugPrint('Jugador '+str(aux[dicc_anotador['Nombre']])+': '+str(aux))
     return anotador
+
+
+def GuardarAnotador (bdd, anotador):
 
 
 def SalirJuego():
