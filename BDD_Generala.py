@@ -64,6 +64,30 @@ def EscribirTabla (bdd, nombre, lista):
     bdd_actual.commit()
 
 
+def ModificarTabla (bdd, nombre, lista):
+    # Recibe una BDD, busca la tabla "nombre" e inserta una lista de datos.
+
+    # todo: Usar el diccionario + la lista de puntajes para conformar una secuencia de "update + set" en SQL.
+    # Hacer el set varias veces (recorriendo cada elemento de la lista
+    # 'nombre' = valor
+    # WHERE 'ID' = contador
+    # Y al final poner el commit.
+
+    bdd.execute("""UPDATE """+ str(nombre) +"""
+    SET
+
+    WHERE
+
+
+
+
+
+
+    """)
+
+
+
+
 def IniciarBDD (directorio, nombreBDD):
     #Recibe el directorio y el nombre de la base de datos.
 

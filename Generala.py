@@ -413,9 +413,6 @@ def ModificarAnotador (anotador, jugador, valor):
     return anotador
 
 
-def GuardarAnotador (bdd, anotador):
-
-
 def SalirJuego():
     #Sale del juego.
     return 1
