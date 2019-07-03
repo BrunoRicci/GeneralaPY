@@ -5,11 +5,11 @@ import sqlite3
 import sys          # Para obtener el directorio actual, y para acceder a la hora.
 
 
-def CrearTabla (bdd, nombre):
+def CrearTabla (bdd, nombretabla, tabla_jugadores):
     #Crea anotador (tabla) de puntaje en una base de datos, con el nombre dado.
                     # IF NOT EXISTS
-   bdd.execute("""
-        CREATE TABLE IF NOT EXISTS """ '\'' + str(nombre) + '\'' """ (
+    bdd.execute("""
+        CREATE TABLE IF NOT EXISTS """ '\'' + str(nombretabla) + '\'' """ (
     	'ID' INTEGER PRIMARY KEY AUTOINCREMENT,
     	'Turno' INTEGER,
     	'Nombre' TEXT,
@@ -25,8 +25,14 @@ def CrearTabla (bdd, nombre):
     	'Generala' INTEGER,
     	'2Generala' INTEGER
         );
-                    """)
+    """)
 
+    for registro in tabla_jugadores:    # Registro: Contiene una columna del anotador (una por jugador).
+        EscribirTabla(bdd,nombretabla,registro)
+
+
+def BorrarTabla (bdd, nombretabla):
+    bdd.execute('DROP TABLE '+str(nombretabla)+';')
 
 def LeerTabla (bdd, nombretabla):
     bdd.execute('SELECT * FROM '+str(nombretabla))
@@ -45,7 +51,7 @@ def LeerPartidas (bdd):
     return bdd.fetchall()
 
 
-def EscribirTabla (bdd, nombre, lista):
+def EscribirTabla (bdd, nombretabla, lista):
     #Crea un registro y escribe una lista de datos ordenados en el mismo.
 
     # print('DEBUG: lista[0] = ' + str(lista[0]))
@@ -57,14 +63,14 @@ def EscribirTabla (bdd, nombre, lista):
         print('DEBUG: lista = ' + str(lista))
 
         bdd.execute("""
-        INSERT INTO """ '\''+str(nombre)+'\''""" ('ID','Nombre','Turno','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
-        """+ str(lista) + ';' """
+        INSERT INTO """ '\'' + str(nombretabla) + '\''""" ('ID','Nombre','Turno','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
+        """ + str(lista) + ';' """
         """)
 
     bdd_actual.commit()
 
 
-def ModificarTabla (bdd, nombre, lista):
+def ModificarTabla (bdd, nombretabla, lista):
     # Recibe una BDD, busca la tabla "nombre" e inserta una lista de datos.
 
     # todo: Usar el diccionario + la lista de puntajes para conformar una secuencia de "update + set" en SQL.
@@ -75,27 +81,24 @@ def ModificarTabla (bdd, nombre, lista):
 
     largolista=len(lista)       # Largo de la lista.
     id=0
-    atributo=str(nombre)
+    atributo=str(nombretabla)
     aux = []
-
 
     for aux in lista:
         # contador = 0
         # for aux in aux:        # Copia el contenido de la columna (registro) en la lista "lista".
-
-
-        #bdd.execute()
-        print("""
+        #bdd.execute()      # En columna 'Nombre', pone comillas así la BDD toma el valor como texto.
+        bdd.execute("""
                     UPDATE """ + str(atributo) + """
-                    'ID'        = """ + str(aux[0]) + """ ,
+                SET 'ID'        = """ + str(aux[0]) + """ ,
                     'Turno'     = """ + str(aux[1]) + """ ,
-                    'Nombre'    = """ + str(aux[2]) + """ ,
-                    '1'         = """ + str(aux[3]) + """ ,
-                    '2'         = """ + str(aux[4]) + """ ,
-                    '3'         = """ + str(aux[5]) + """ ,
-                    '4'         = """ + str(aux[6]) + """ ,
-                    '5'         = """ + str(aux[7]) + """ ,
-                    '6'         = """ + str(aux[8]) + """ ,
+                    'Nombre'    = ' """ + str(aux[2]) + """ ' ,
+                    'Uno'         = """ + str(aux[3]) + """ ,
+                    'Dos'         = """ + str(aux[4]) + """ ,
+                    'Tres'         = """ + str(aux[5]) + """ ,
+                    'Cuatro'         = """ + str(aux[6]) + """ ,
+                    'Cinco'         = """ + str(aux[7]) + """ ,
+                    'Seis'         = """ + str(aux[8]) + """ ,
                     'Escalera'  = """ + str(aux[9]) + """ ,
                     'Full'      = """ + str(aux[10]) + """ ,
                     'Poker'     = """ + str(aux[11]) + """ ,
@@ -104,7 +107,10 @@ def ModificarTabla (bdd, nombre, lista):
 
                     WHERE 'ID'  = """ + str((aux[0])) + """;
                 """)
+
+    bdd.commit()
            #fixme: El commit debería hacerse en otra función, o no?
+
 
 def IniciarBDD (directorio, nombreBDD):
     #Recibe el directorio y el nombre de la base de datos.
@@ -120,6 +126,16 @@ def IniciarBDD (directorio, nombreBDD):
     return bdd
 
 
+def BuscarTablas (bdd):
+
+    bdd.execute('SELECT name FROM sqlite_master')
+
+    lista_tablas =(bdd.fetchall())
+
+    print('lista_tablas:')
+    print('lista_tablas[0]= ',str(lista_tablas[0][0]))
+    print('lista_tablas[1]= ',str(lista_tablas[1][0]))
+
 directorio_local= str(sys.path[0])          # Directorio local donde se aloja el programa.
 
 bdd_actual=0 #Indica que no hay BDD abierta
@@ -128,6 +144,7 @@ bdd_cursor= bdd_actual.cursor()  # Asigna el cursor.
 
 nombre_partida='Partida_1'
 
+# BuscarTablas(bdd_cursor)
 
 
 ####################### Pruebas ###########################

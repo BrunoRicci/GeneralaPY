@@ -22,9 +22,6 @@ dicc_anotador = { # Nombre diccionario / ubicación en la lista.)
 }
 
 
-puntajes_jugador = []
-
-
 def Cantidad_por_numero(jugada):
     # [Nombre]['1','2','3','4','5','6','Escalera','Full','Poker','Generala','2Generala']
     # Recibe una jugada, y devuelve una lista que contiene de forma ordenada la cantidad de dados que salieron con cada dado.
@@ -73,8 +70,6 @@ def Tirar_Dados(j, d_n):
         # DebugPrint('d_n='+str(d_n))
         # DebugPrint('len(d_n)='+str(len(d_n)))
 
-        #        # todo: Hacer que en la función de ElegirDados ponga los elementos de la lista que no se usan en 0.
-        #        # todo: ejemplo: 1,2,4 -> [1,2,4,0,0]
 
         for dado in d_n:
             if dado != int(0):
@@ -115,7 +110,9 @@ def Elegir_dados():
     ingreso_ok = 1  #Inicializo variable
     dados = []
 
-    dados = str(input('Ingrese cuáles dados desea volver a lanzar, separados por coma: \n\n'))
+    print('\nIngrese cuáles dados desea volver a lanzar, separados por coma:')
+    print('Para plantarse, ingrese 0 (cero).  \n')
+    dados = str(input())
     dados = dados.split(',')  # Genera lista con los dados
     # DebugPrint('dados='+str(dados))
 #    DebugPrint('len(dados)='+str(len(dados)))
@@ -246,10 +243,10 @@ def NuevaPartida():
     print('     Nueva partida:\n\n')
 
     lista_jugadores=PedirIngresoJugadores()        #Pide que se ingresen los jugadores.
-    nombre_partida= BDD_Generala.nombre_partida
+    nombre_partida= BDD_Generala.nombre_partida     #Nombre de la tabla asociada a la partida.
     # cursor=BDD_Generala.bdd_cursor
 
-    print('Los jusgadores son:')  # Imprime la lista de jugadores.
+    print('Los jugadores son:')  # Imprime la lista de jugadores.
     for aux in lista_jugadores:
         print(aux)
 
@@ -263,10 +260,10 @@ def NuevaPartida():
     #         #Vuelve atrás... -> Llamar a la misma función?
     #         a=0
 
-    BDD_Generala.CrearTabla(BDD_Generala.bdd_cursor, nombre_partida)        #Crea tabla (si no existe) con el nombre dado.
-    tabla_jugadores=ArmarTablaPuntajes(lista_jugadores)
-    for registro in tabla_jugadores:
-        BDD_Generala.EscribirTabla(BDD_Generala.bdd_cursor,nombre_partida,registro)
+    BDD_Generala.BorrarTabla(BDD_Generala.bdd_cursor, nombre_partida)       #Borra tabla actual
+
+    tabla_jugadores = ArmarTablaPuntajes(lista_jugadores)
+    BDD_Generala.CrearTabla(BDD_Generala.bdd_cursor, nombre_partida, tabla_jugadores)      #Crea tabla (si no existe) con el nombre dado.
 
     return tabla_jugadores
 
@@ -317,6 +314,7 @@ def ArmarTablaPuntajes (jugadores):
     # Arma una lista con los jugadores y sus posibles puntajes, incializados todos en int(0).
     # Los puntajes se deben almacenar en formato string; de haber uno en formato int (como el 0 inicial),
     # quiere decir que el puntaje de esa jugada no ha sido utilizado aún y que está disponible (no tachado).
+    # Recibe una columna (hay una por jugador) y la inserta en el anotador.
 
     anotador = []
     columna = []
@@ -325,16 +323,17 @@ def ArmarTablaPuntajes (jugadores):
     for nombre in jugadores:
         columna.append(num_jugador)
         num_jugador=num_jugador+1       #Incrementa numero
-        columna.append(nombre)  # Coloca el nombre en la columna
         columna.append(0)       # Coloca numero de turno en la columna
+        columna.append(nombre)  # Coloca el nombre en la columna
         for i in range(0,11):           # Agrega 11 elementos a la lista, incializando todos en valor int(-1) -> casillero vacío.
             columna.append(int(-1))
         # DebugPrint('columna = ' + str(columna))
+
         anotador.append(columna)        # Agrega columna generada al anotador.
         columna=[]                      # Limpia lista de columna.
 
     anotador[0][dicc_anotador['Turno']]=1       #Pone numero "1" en el primer jugador; indicando que va por el primer tiro...
-    #DebugPrint('anotador = ' + str(anotador))
+    # DebugPrint('anotador = ' + str(anotador))
 
     return anotador
 
@@ -463,6 +462,6 @@ def MenuPrincipal():
 
 #ArmarTablaPuntajes(['Jugador 1','Jugador 2','Jugador 3'])
 
-
-CorrerJuego(CargarPartida())
+MenuPrincipal()
+#CorrerJuego(CargarPartida())
 
