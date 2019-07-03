@@ -359,7 +359,7 @@ def CorrerJuego (tabla_puntajes):
                                                         # qué número de tiro, se debe utlizar otra función, o hacer que
                                                         # devuelva una lista con el N° de jugador y el numero de tiro.
 
-        while jugador < cantidad_jugadores :        # Recorre los turnos hasta que se termine la ronda...
+        while jugador <= cantidad_jugadores :        # Recorre los turnos hasta que se termine la ronda...
             puntaje=Turno_Jugador(tabla_puntajes[jugador-1])  # Inicia el turno del jugador... el -1 es xq empieza en 0.
             os.system('cls')
             if puntaje != 'FIN':   # Si no finalizó la partida...
@@ -372,7 +372,7 @@ def CorrerJuego (tabla_puntajes):
                     jugador = 0
 
                 tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador-1, ['Turno', 1])   # Turno del próximo jugador.
-                BDD_Generala.ModificarTabla(BDD_Generala.bdd_actual,BDD_Generala.nombre_partida,tabla_puntajes)    # Guarda el anotador en la BDD.
+                BDD_Generala.ModificarTabla(BDD_Generala.bdd_cursor,BDD_Generala.nombre_partida,tabla_puntajes)    # Guarda el anotador en la BDD.
             else:
                 finalizar_ronda = 1
 

@@ -67,7 +67,7 @@ def EscribirTabla (bdd, nombretabla, lista):
         """ + str(lista) + ';' """
         """)
 
-    bdd_actual.commit()
+        bdd_actual.commit()
 
 
 def ModificarTabla (bdd, nombretabla, lista):
@@ -105,10 +105,11 @@ def ModificarTabla (bdd, nombretabla, lista):
                     'Generala'  = """ + str(aux[12]) + """ ,
                     '2Generala' = """ + str(aux[13]) + """
 
-                    WHERE 'ID'  = """ + str((aux[0])) + """;
+                    WHERE ID  = """ + str((aux[0])) + """;
                 """)
+        bdd_actual.commit()
+        print('_commit_')
 
-    bdd.commit()
            #fixme: El commit debería hacerse en otra función, o no?
 
 
