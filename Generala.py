@@ -373,7 +373,7 @@ def CorrerJuego (tabla_puntajes):
                     jugador = 0
 
                 tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador-1, ['Turno', 1])   # Turno del próximo jugador.
-                GuardarAnotador(BDD_Generala.bdd_actual,tabla_puntajes)    # Guarda el anotador en la BDD.
+                BDD_Generala.ModificarTabla(BDD_Generala.bdd_actual,BDD_Generala.nombre_partida,tabla_puntajes)    # Guarda el anotador en la BDD.
             else:
                 finalizar_ronda = 1
 

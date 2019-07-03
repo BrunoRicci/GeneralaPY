@@ -73,20 +73,38 @@ def ModificarTabla (bdd, nombre, lista):
     # WHERE 'ID' = contador
     # Y al final poner el commit.
 
-    bdd.execute("""UPDATE """+ str(nombre) +"""
-    SET
-
-    WHERE
-
-
+    largolista=len(lista)       # Largo de la lista.
+    id=0
+    atributo=str(nombre)
+    aux = []
 
 
+    for aux in lista:
+        # contador = 0
+        # for aux in aux:        # Copia el contenido de la columna (registro) en la lista "lista".
 
 
-    """)
+        #bdd.execute()
+        print("""
+                    UPDATE """ + str(atributo) + """
+                    'ID'        = """ + str(aux[0]) + """ ,
+                    'Turno'     = """ + str(aux[1]) + """ ,
+                    'Nombre'    = """ + str(aux[2]) + """ ,
+                    '1'         = """ + str(aux[3]) + """ ,
+                    '2'         = """ + str(aux[4]) + """ ,
+                    '3'         = """ + str(aux[5]) + """ ,
+                    '4'         = """ + str(aux[6]) + """ ,
+                    '5'         = """ + str(aux[7]) + """ ,
+                    '6'         = """ + str(aux[8]) + """ ,
+                    'Escalera'  = """ + str(aux[9]) + """ ,
+                    'Full'      = """ + str(aux[10]) + """ ,
+                    'Poker'     = """ + str(aux[11]) + """ ,
+                    'Generala'  = """ + str(aux[12]) + """ ,
+                    '2Generala' = """ + str(aux[13]) + """
 
-
-
+                    WHERE 'ID'  = """ + str((aux[0])) + """;
+                """)
+           #fixme: El commit debería hacerse en otra función, o no?
 
 def IniciarBDD (directorio, nombreBDD):
     #Recibe el directorio y el nombre de la base de datos.
