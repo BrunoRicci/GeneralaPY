@@ -333,7 +333,7 @@ def ArmarTablaPuntajes (jugadores):
         columna=[]                      # Limpia lista de columna.
 
     anotador[0][dicc_anotador['Turno']]=1       #Pone numero "1" en el primer jugador; indicando que va por el primer tiro...
-    # DebugPrint('anotador = ' + str(anotador))
+    DebugPrint('anotador = ' + str(anotador))
 
     return anotador
 
@@ -380,12 +380,11 @@ def CorrerJuego (tabla_puntajes):
 
 
 def ObtenerTurnoJugador (anotador):
-    jugador=0
     jugador_actual=0
     largo=len(anotador)     #Cantidad de jugadores
-
+    DebugPrint('lista:')
     for lista in anotador:      #Poner centinela para no hacer el loop completo innecesariamente
-        jugador=jugador + 1
+        DebugPrint('lista : '+str(lista))
         if int(lista[dicc_anotador['Turno']]) >= 1:      #Si el el turno del jugador...
             jugador_actual=lista[dicc_anotador['ID']]   #Guarda el ID (numero de jugador).
 

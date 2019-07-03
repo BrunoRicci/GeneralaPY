@@ -63,7 +63,7 @@ def EscribirTabla (bdd, nombretabla, lista):
         print('DEBUG: lista = ' + str(lista))
 
         bdd.execute("""
-        INSERT INTO """ '\'' + str(nombretabla) + '\''""" ('ID','Nombre','Turno','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
+        INSERT INTO """ '\'' + str(nombretabla) + '\''""" ('ID','Turno','Nombre','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
         """ + str(lista) + ';' """
         """)
 
@@ -132,9 +132,9 @@ def BuscarTablas (bdd):
 
     lista_tablas =(bdd.fetchall())
 
-    print('lista_tablas:')
-    print('lista_tablas[0]= ',str(lista_tablas[0][0]))
-    print('lista_tablas[1]= ',str(lista_tablas[1][0]))
+    # print('lista_tablas:')
+    # print('lista_tablas[0]= ',str(lista_tablas[0][0]))
+    # print('lista_tablas[1]= ',str(lista_tablas[1][0]))
 
 directorio_local= str(sys.path[0])          # Directorio local donde se aloja el programa.
 
