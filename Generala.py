@@ -199,10 +199,10 @@ def Turno_Jugador(puntaje):
     lista_puntaje=[]
     cn=1
     for aux in puntaje:     # Recorre los puntajes logrados...
-        if aux[1] != 0:     # Mientras el puntaje a esa jugada fue mayor a cero...
-            print(str(cn)+': '+str(aux))    # Muestra el puntaje.
-            lista_puntaje.append(aux)
-            cn = cn + 1         # Incrementa el contador.
+    # if aux[1] != 0:     # Mientras el puntaje a esa jugada fue mayor a cero...    # Se sacó esta línea para poder tachar otras jugadas.
+        print(str(cn)+': '+str(aux))    # Muestra el puntaje.
+        lista_puntaje.append(aux)
+        cn = cn + 1         # Incrementa el contador.
 
     aux=0
     while not (int(aux) > 0  and int(aux) < cn):
@@ -405,9 +405,10 @@ def ModificarAnotador (anotador, jugador, valor):
 
     # Coloca en la posición incicada (en cuál de todos los puntajes) el valor numérico del puntaje.
     anotador[jugador][dicc_anotador[str(valor[0])]] = valor[1]     #Pone el valor numérico en la posición del puntaje.
-    DebugPrint('    anotador:')
+    # DebugPrint('    anotador:')
     for aux in anotador:
-        DebugPrint('Jugador '+str(aux[dicc_anotador['Nombre']])+': '+str(aux))
+        # DebugPrint('Jugador '+str(aux[dicc_anotador['Nombre']])+': '+str(aux))
+        a=0
     return anotador
 
 

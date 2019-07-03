@@ -108,7 +108,7 @@ def ModificarTabla (bdd, nombretabla, lista):
                     WHERE ID  = """ + str((aux[0])) + """;
                 """)
         bdd_actual.commit()
-        print('_commit_')
+        # print('_commit_')
 
            #fixme: El commit debería hacerse en otra función, o no?
 
