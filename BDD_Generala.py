@@ -92,7 +92,7 @@ def ModificarTabla (bdd, nombretabla, lista):
                     UPDATE """ + str(atributo) + """
                 SET 'ID'        = """ + str(aux[0]) + """ ,
                     'Turno'     = """ + str(aux[1]) + """ ,
-                    'Nombre'    = ' """ + str(aux[2]) + """ ' ,
+                    'Nombre'    = '""" + str(aux[2]) + """' ,
                     'Uno'         = """ + str(aux[3]) + """ ,
                     'Dos'         = """ + str(aux[4]) + """ ,
                     'Tres'         = """ + str(aux[5]) + """ ,
