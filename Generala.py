@@ -193,15 +193,17 @@ def Turno_Jugador(puntaje_jugador):
             dados_relanzados = Elegir_dados()
             # DebugPrint('dados_relanzados=' + str(dados_relanzados))
 
-            # if dados_relanzados[0] == 0:        #Si no se ingresa nada...
-            #     a=0 # Dar aviso de error.
+
             # elif dados_relanzados[0] == '0':
-            if dados_relanzados[0] == '0':        #todo: Hacer algo para evitar que si el resultado de Elegir_dados da 0 (error) no entre al if que accede a la posicion [0, ya que esto no es posible.
-                # dados_relanzados = [0,0,0,0,0]
-                fin_turno=1
-            else:                   # Si se ingresó correctamente uno o más dados..
-                jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
-                print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
+            if type(dados_relanzados)!= type(int(0)):    # Si no es un entero...
+                if dados_relanzados[0] == '0':        #todo: Hacer algo para evitar que si el resultado de Elegir_dados da 0 (error) no entre al if que accede a la posicion [0, ya que esto no es posible.
+                    # dados_relanzados = [0,0,0,0,0]
+                    fin_turno=1
+                else:                   # Si se ingresó correctamente uno o más dados..
+                    jugada = OrdenarDados(Tirar_Dados(jugada, dados_relanzados))  # Lanza los dados...
+                    print('   Tiro ' + str(contador_tiros + 1) + ': ' + str(jugada))  # Muestra los dados
+            elif dados_relanzados[0] == 0:        #Si no se ingresa nada...
+                MensajeError('Seleccione dados correctamente!')
 
     puntaje_final = Determinar_jugadas(Cantidad_por_numero(jugada))   # Determina qué jugadas (especiales o no) se lograron.
 
@@ -211,6 +213,7 @@ def Turno_Jugador(puntaje_jugador):
     lista_puntaje=[]
     cn=0
     for aux in puntaje_final:     # Recorre los puntajes logrados...
+
         if contador_tiros == 1 and aux[1] != 0:          # Si fue jugada servida...
             if (aux[0] == 'Escalera') or (aux[0] == 'Full') or (aux[0] == 'Poker') or (aux[0] == 'Generala'):
                 #todo: Chequear si el jugador ya hizo generala -> Para finalizar la partida.
@@ -220,7 +223,7 @@ def Turno_Jugador(puntaje_jugador):
                 else:
                     aux[1] = aux[1] + 5  # Suma 5 por ser jugada servida.
 
-        if aux[0] == 'Generala' and puntaje_jugador[dicc_anotador['Generala']] > 0:     # Si ya hizo generala...
+        elif aux[0] == 'Generala' and puntaje_jugador[dicc_anotador['Generala']] > 0:     # Si ya hizo generala...
             aux = ['Doble generala',60]
 
         if puntaje_jugador[puntaje_final.index(aux)+3] == (-1):       #Si el casillero no está utilizado...
@@ -358,6 +361,8 @@ def CorrerJuego (tabla_puntajes):
     # Controla el orden de los turnos de los jugadores.
 
     finalizar_ronda = 0    # Inicializo variable
+
+    jugador = ObtenerTurnoJugador(tabla_puntajes)  # Obtiene el turno del jugador correspondiente.
     num_ronda = ObtenerRonda(tabla_puntajes)    # Obtiene el número de ronda actual
 
 
@@ -365,9 +370,7 @@ def CorrerJuego (tabla_puntajes):
     cantidad_jugadores=len(tabla_puntajes)
 
     while num_ronda < 11 :
-        jugador = ObtenerTurnoJugador(tabla_puntajes)   # Obtiene el turno del jugador correspondiente. Para saber
-                                                        # qué número de tiro, se debe utlizar otra función, o hacer que
-                                                        # devuelva una lista con el N° de jugador y el numero de tiro.
+        # jugador = ObtenerTurnoJugador(tabla_puntajes)  # Obtiene el turno del jugador correspondiente.
 
         while jugador <= cantidad_jugadores and finalizar_ronda != 1:        # Recorre los turnos hasta que se termine la ronda...
 
@@ -377,66 +380,80 @@ def CorrerJuego (tabla_puntajes):
                 tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador-1, puntaje)          # Anota el puntaje.
                 tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador-1, ['Turno', 0])   # Finaliza turno jugador actual.
 
-                # if jugador < (cantidad_jugadores - 1):
-                #     jugador = jugador + 1
-                # else:
-                #     jugador = 0
+                if jugador < cantidad_jugadores:    # Incrementa al siguiete jugador.
+                    jugador=jugador+1
+                else:
+                    finalizar_ronda=1
+                    jugador=1
 
                 tabla_puntajes = ModificarAnotador(tabla_puntajes, jugador-1, ['Turno', 1]) # Turno del próximo jugador.
+
                 BDD_Generala.ModificarTabla(BDD_Generala.bdd_cursor,BDD_Generala.nombre_partida,tabla_puntajes)    # Guarda el anotador en la BDD.
+
             else:
-                finalizar_ronda=1
+                print(' ---- GENERALA SERVIDA ----')
+                # print('   .- JUEGO  TERMINADO -.')
                 num_ronda=11        #Finaliza el juego
 
         num_ronda=num_ronda+1   #Incrementa el numero de ronda.
+        finalizar_ronda=0
 
-    print('_________________________________ FIN DEL JUEGO _________________________________')
+    print('\n\n_________________________________ FIN DEL JUEGO _________________________________\n')
     MostrarPuntajes(tabla_puntajes)
-    print('\nPuntajes totales:')
-    for i in DeterminarPuntajes(tabla_puntajes):
-        lista_aux = []
+    print('\nPuestos y puntajes totales:')
+
+    lista_aux = DeterminarPuntajes(tabla_puntajes)
+    lista_puntajes = []
+    for i in lista_aux:
+        lista_puntajes.append(i)
+
+
+
+    mayor=['',0]
+    for i in lista_aux:
+        if i[1] >= mayor[1]:
+            mayor=i             #Guarda jugador + puntaje en "mayor".
         print('Jugador '+str(i[0])+' :'+ str(i[1]))
-        lista_aux.append(i[1])  # Agrupa los puntajes totales.
-
-    print('El ganador es: '+str(tabla_puntajes)
 
 
+    print('El ganador es: '+str(mayor[0]))
+
+    ##QUé pasa si hay empate??
 
 
 
 def MostrarPuntajes(tabla):
     #Muestra los puntajes, partiendo de una tabla en el formato normalizado. Si se envía una columna, muestra solo esa.
 
-
-
     print('__________________________ PUNTAJES: __________________________')
     print('Jugador       | 1 | 2 | 3  | 4 | 5 | 6  | E  | F | P  | G | 2G |')
 
-    tablaaux=[]    #FIXME: ARREGLAR!! Se puso esto para que "columna" tome un único valor en caso de no ser tabla (lista simple).
-    tablaaux.append(tabla)
-    tablaaux.append([''])
-    tabla=tablaaux
+    if len(tabla) == 14:    #Si puede ser una única columna...
+        if type(tabla[0])==(type (int(0))):    #Si lo que contiene no es una lista...
+            tablaaux = []  # FIXME: ARREGLAR!! Se puso esto para que "columna" tome un único valor en caso de no ser tabla (lista simple).
+            tablaaux.append(tabla)  # Crea una lista de listas, incluyendo la columna y una vacía.
+            tablaaux.append([''])   # Agrega una lista "dummy" para que la variable "columna" tome el valor de listas completas.
+            tabla = tablaaux
 
-    # DebugPrint('tabla = ' + str(tabla))
 
     for columna in tabla:
 
-        if len(columna) == 14:
+        if len(columna) == 14:  # Si es una lista válida (formato normalizado, 14 elementos)...
             aux = []  # Creo lista.
             largonombre = len(columna[dicc_anotador['Nombre']])  # Largo del nombre.
             aux.append(columna[dicc_anotador['Nombre']]+str(' '*(13-largonombre)))        #Coloco nombre
 
-            for cn in range(3,14):
+            for cn in range(3,14):      # Recorre los datos de los puntajes
                 aux.append(columna[cn])
-                if aux[cn-2] == (-1):
-                    aux[cn - 2]= ' '    #Espacio en blanco.
+                if aux[cn-2] == (-1):   # Si no hay nada anotado...
+                    aux[cn - 2]= ' '    # Coloca espacio en blanco.
 
             string=''
             for i in aux:
                 string = string + str(( str(i) +' | '))
             print(str(string))
-            print('_______________________________________________________________\n')
 
+    print('_______________________________________________________________\n')
 
 def ObtenerTurnoJugador (anotador):
     jugador_actual=0
@@ -468,9 +485,9 @@ def ModificarAnotador (anotador, jugador, valor):
     # Coloca en la posición incicada (en cuál de todos los puntajes) el valor numérico del puntaje.
     anotador[jugador][dicc_anotador[str(valor[0])]] = valor[1]     #Pone el valor numérico en la posición del puntaje.
     # DebugPrint('    anotador:')
-    for aux in anotador:
-        # DebugPrint('Jugador '+str(aux[dicc_anotador['Nombre']])+': '+str(aux))
-        a=0
+    # for aux in anotador:
+    #     # DebugPrint('Jugador '+str(aux[dicc_anotador['Nombre']])+': '+str(aux))
+    #     a=0
     return anotador
 
 
