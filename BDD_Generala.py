@@ -32,7 +32,7 @@ def CrearTabla (bdd, nombretabla, tabla_jugadores):
 
 
 def BorrarTabla (bdd, nombretabla):
-    bdd.execute('DROP TABLE '+str(nombretabla)+';')
+    bdd.execute('DROP TABLE IF EXISTS '+str(nombretabla)+';')
 
 def LeerTabla (bdd, nombretabla):
     bdd.execute('SELECT * FROM '+str(nombretabla))

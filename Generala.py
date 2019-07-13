@@ -277,6 +277,8 @@ def NuevaPartida():
     #         #Vuelve atrás... -> Llamar a la misma función?
     #         a=0
 
+    # DebugPrint('PARTIDAS: '+str(BDD_Generala.LeerPartidas(BDD_Generala.bdd_actual)))
+
     BDD_Generala.BorrarTabla(BDD_Generala.bdd_cursor, nombre_partida)       #Borra tabla actual
 
     tabla_jugadores = ArmarTablaPuntajes(lista_jugadores)
@@ -402,21 +404,39 @@ def CorrerJuego (tabla_puntajes):
     MostrarPuntajes(tabla_puntajes)
     print('\nPuestos y puntajes totales:')
 
-    lista_aux = DeterminarPuntajes(tabla_puntajes)
-    lista_puntajes = []
-    for i in lista_aux:
-        lista_puntajes.append(i)
+    lista_puntajes = DeterminarPuntajes(tabla_puntajes)
+    # DebugPrint('lista_puntajes =' + str(lista_puntajes))
+    lista_aux = []
+    i=0
+    for i in lista_puntajes:
+        lista_aux.append(i[1])
+
+    lista_aux.sort(reverse=True)  #Ordena de menor a mayor
+
+    lista_resultados = []
+    for cn in range (0,len(lista_aux)):
+        for i in lista_puntajes:     #Recorre los resultados, ordenados de menor a mayor
+            # DebugPrint('i = ' + str((i)))
+            # DebugPrint('index = '+str(lista_puntajes.index(i)))
+            # DebugPrint('valor_comparacion = '+str(lista_aux[lista_puntajes.index(i)]))
+            if i[1]==lista_aux[cn]:
+                lista_resultados.append(i)
+            # DebugPrint('lista_resultados =' + str(lista_resultados))
+
+    i=0
+    for i in lista_resultados:
+        print(  str(lista_resultados.index(i) + 1) +'°-> ' + str(i[0]) + ' : ' + str(i[1]) +'.'  )
 
 
 
-    mayor=['',0]
-    for i in lista_aux:
-        if i[1] >= mayor[1]:
-            mayor=i             #Guarda jugador + puntaje en "mayor".
-        print('Jugador '+str(i[0])+' :'+ str(i[1]))
-
-
-    print('El ganador es: '+str(mayor[0]))
+    # mayor=['',0]
+    # for i in lista_aux:
+    #     if i[1] >= mayor[1]:
+    #         mayor=i             #Guarda jugador + puntaje en "mayor".
+    #     print('Jugador '+str(i[0])+' :'+ str(i[1]))
+    #
+    #
+    # print('El ganador es: '+str(mayor[0]))
 
     ##QUé pasa si hay empate??
 
@@ -425,8 +445,8 @@ def CorrerJuego (tabla_puntajes):
 def MostrarPuntajes(tabla):
     #Muestra los puntajes, partiendo de una tabla en el formato normalizado. Si se envía una columna, muestra solo esa.
 
-    print('__________________________ PUNTAJES: __________________________')
-    print('Jugador       | 1 | 2 | 3  | 4 | 5 | 6  | E  | F | P  | G | 2G |')
+    print('_____________________________ PUNTAJES: ______________________________')
+    print('Jugador       | 1  | 2  | 3  | 4  | 5  | 6  | E  | F  | P  | G  | 2G |')
 
     if len(tabla) == 14:    #Si puede ser una única columna...
         if type(tabla[0])==(type (int(0))):    #Si lo que contiene no es una lista...
@@ -444,16 +464,20 @@ def MostrarPuntajes(tabla):
             aux.append(columna[dicc_anotador['Nombre']]+str(' '*(13-largonombre)))        #Coloco nombre
 
             for cn in range(3,14):      # Recorre los datos de los puntajes
-                aux.append(columna[cn])
-                if aux[cn-2] == (-1):   # Si no hay nada anotado...
-                    aux[cn - 2]= ' '    # Coloca espacio en blanco.
+                if columna[cn] < 10:
+                    aux.append(' '+str(columna[cn]))
+                else:
+                    aux.append(columna[cn])
+
+                if columna[cn] == (-1):   # Si no hay nada anotado...
+                    aux[cn - 2]= '--'    # Coloca espacio en blanco.
 
             string=''
             for i in aux:
                 string = string + str(( str(i) +' | '))
             print(str(string))
 
-    print('_______________________________________________________________\n')
+    print('______________________________________________________________________\n')
 
 def ObtenerTurnoJugador (anotador):
     jugador_actual=0
