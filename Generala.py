@@ -277,7 +277,7 @@ def NuevaPartida():
     #         #Vuelve atrás... -> Llamar a la misma función?
     #         a=0
 
-    # DebugPrint('PARTIDAS: '+str(BDD_Generala.LeerPartidas(BDD_Generala.bdd_actual)))
+    # DebugPrint('PARTIDAS: '+str(BDD_Generala.LeerPartidas(BDD_Generala.bdd_cursor)))
 
     BDD_Generala.BorrarTabla(BDD_Generala.bdd_cursor, nombre_partida)       #Borra tabla actual
 
@@ -290,9 +290,19 @@ def NuevaPartida():
 def CargarPartida():
     nombre='Partida_1'
     # Obtiene el anotador (tabla de puntos) y lo pasa a tipo lista.
-    tabla = CastearALista(BDD_Generala.LeerTabla(BDD_Generala.bdd_cursor,nombre))
 
-    return tabla
+    bdd_tablas=BDD_Generala.LeerPartidas(BDD_Generala.bdd_cursor)
+    DebugPrint('bdd_tablas = '+str(bdd_tablas))
+    for tabla in bdd_tablas:
+        DebugPrint('tabla[0] = ' + str(tabla[0]))
+        if nombre in tabla[0]:    # Si existe la tabla...
+            tabla = CastearALista(BDD_Generala.LeerTabla(BDD_Generala.bdd_cursor,nombre))
+
+    if tabla != 0:
+        return tabla
+    else:
+        MensajeError('     ¡Partida inexistente! Cree una nueva partida.', 1)
+        return 0
 
 
 def CastearALista (tupla):
@@ -441,7 +451,6 @@ def CorrerJuego (tabla_puntajes):
     ##QUé pasa si hay empate??
 
 
-
 def MostrarPuntajes(tabla):
     #Muestra los puntajes, partiendo de una tabla en el formato normalizado. Si se envía una columna, muestra solo esa.
 
@@ -478,6 +487,7 @@ def MostrarPuntajes(tabla):
             print(str(string))
 
     print('______________________________________________________________________\n')
+
 
 def ObtenerTurnoJugador (anotador):
     jugador_actual=0
@@ -532,13 +542,9 @@ def DeterminarPuntajes (tabla):
     return lista_puntajes
 
 
-
-
-
-
 def SalirJuego():
     #Sale del juego.
-    return 1
+    exit(1) #Finaliza con valor 1.
 
 
 def MenuPrincipal():
@@ -560,10 +566,13 @@ def MenuPrincipal():
     elif opcion == 3:
         SalirJuego()
 
-    CorrerJuego(tabla)      #Inicia el juego con la tabla actual seleccionada (nueva o continuada).
+    if type(tabla) == list:
+        CorrerJuego(tabla)      #Inicia el juego con la tabla actual seleccionada (nueva o continuada).
+    else:
+        MensajeError('   El juego se cerrará.',1)
+        SalirJuego()
 
-
-    return 0 #Finaliza el programa sin error...
+    return 1 #Finaliza el programa sin error...
 
 
 #############################################################################-
