@@ -292,10 +292,10 @@ def CargarPartida():
     # Obtiene el anotador (tabla de puntos) y lo pasa a tipo lista.
 
     bdd_tablas=BDD_Generala.LeerPartidas(BDD_Generala.bdd_cursor)
-    DebugPrint('bdd_tablas = '+str(bdd_tablas))
+    # DebugPrint('bdd_tablas = '+str(bdd_tablas))
     for tabla in bdd_tablas:
-        DebugPrint('tabla[0] = ' + str(tabla[0]))
-        if nombre in tabla[0]:    # Si existe la tabla...
+        # DebugPrint('tabla[0] = ' + str(tabla[0]))
+        if nombre in tabla[0]:    # Si existe la tabla en las existentes...
             tabla = CastearALista(BDD_Generala.LeerTabla(BDD_Generala.bdd_cursor,nombre))
 
     if tabla != 0:
