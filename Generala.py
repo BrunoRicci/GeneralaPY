@@ -483,11 +483,11 @@ def ObtenerTurnoJugador (anotador):
     largo=len(anotador)     #Cantidad de jugadores
     # DebugPrint('lista:')
     for lista in anotador:      #Poner centinela para no hacer el loop completo innecesariamente
-        DebugPrint('lista : '+str(lista))
+        # DebugPrint('lista : '+str(lista))
         if int(lista[dicc_anotador['Turno']]) >= 1:      #Si es el turno del jugador...
             jugador_actual=lista[dicc_anotador['ID']]   #Guarda el ID (numero de jugador).
 
-    DebugPrint('jugador_actual: '+str(jugador_actual))
+    # DebugPrint('jugador_actual: '+str(jugador_actual))
 
     return jugador_actual   #Devuelve el ID de jugador.
 
