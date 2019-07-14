@@ -434,7 +434,7 @@ def CorrerJuego (tabla_puntajes):
             # DebugPrint('lista_resultados =' + str(lista_resultados))
 
     i=0
-    for i in lista_resultados:
+    for i in lista_resultados:  #Muestra los puestos
         print(  str(lista_resultados.index(i) + 1) +'°-> ' + str(i[0]) + ' : ' + str(i[1]) +'.'  )
 
     input('\n        Presione ENTER para cerrar el juego.')   # Espera a que se presione ENTER para cerrar.
