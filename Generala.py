@@ -362,7 +362,7 @@ def ArmarTablaPuntajes (jugadores):
         columna=[]                      # Limpia lista de columna.
 
     anotador[0][dicc_anotador['Turno']]=1       #Pone numero "1" en el primer jugador; indicando que va por el primer tiro...
-    DebugPrint('anotador = ' + str(anotador))
+    # DebugPrint('anotador = ' + str(anotador))
 
     return anotador
 

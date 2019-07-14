@@ -60,7 +60,7 @@ def EscribirTabla (bdd, nombretabla, lista):
     if len(lista) >= 13:    #Puede o no tener campo de PK
         lista=tuple(lista)  # Transforma la lista a una tupla, para convertir los corchetes a paréntesis
                             # y hacer así una instrucción compatible ocn la base de datos.
-        print('DEBUG: lista = ' + str(lista))
+        # print('DEBUG: lista = ' + str(lista))
 
         bdd.execute("""
         INSERT INTO """ '\'' + str(nombretabla) + '\''""" ('ID','Turno','Nombre','Uno','Dos','Tres','Cuatro','Cinco','Seis','Escalera','Full','Poker','Generala','2Generala') VALUES
