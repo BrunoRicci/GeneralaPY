@@ -320,7 +320,7 @@ def PedirIngresoJugadores ():
     jugador = ''  # Inicalizo variable...
     while avance_ok != 1:  # Pide jugadores hasta que ingrese '0'. Mientras
         # todo: Poner opción para cancelar/ir para atrás... -> Cómo hacer para detectar la tecla <ESC> presionada??
-        jugador = str(input('   Ingrese el nombre de un jugador y presione <ENTER>...\n '))
+        jugador = str(input('   Ingrese el nombre de un jugador y presione <ENTER>... 0 (cero) para terminar.\n '))
         jugador = jugador.upper()  # Pone todas las letras en mayúsculas...
 
         if jugador != '0':
@@ -438,7 +438,7 @@ def CorrerJuego (tabla_puntajes):
         print(  str(lista_resultados.index(i) + 1) +'°-> ' + str(i[0]) + ' : ' + str(i[1]) +'.'  )
 
     input('\n        Presione ENTER para cerrar el juego.')   # Espera a que se presione ENTER para cerrar.
-#   ---------------------------------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------------------------------------
 
 
 def MostrarPuntajes (tabla):
