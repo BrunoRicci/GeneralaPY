@@ -437,21 +437,10 @@ def CorrerJuego (tabla_puntajes):
     for i in lista_resultados:
         print(  str(lista_resultados.index(i) + 1) +'°-> ' + str(i[0]) + ' : ' + str(i[1]) +'.'  )
 
+#   ---------------------------------------------------------------------------------------------------------
 
 
-    # mayor=['',0]
-    # for i in lista_aux:
-    #     if i[1] >= mayor[1]:
-    #         mayor=i             #Guarda jugador + puntaje en "mayor".
-    #     print('Jugador '+str(i[0])+' :'+ str(i[1]))
-    #
-    #
-    # print('El ganador es: '+str(mayor[0]))
-
-    ##QUé pasa si hay empate??
-
-
-def MostrarPuntajes(tabla):
+def MostrarPuntajes (tabla):
     #Muestra los puntajes, partiendo de una tabla en el formato normalizado. Si se envía una columna, muestra solo esa.
 
     print('_____________________________ PUNTAJES: ______________________________')
@@ -570,7 +559,9 @@ def MenuPrincipal():
         CorrerJuego(tabla)      #Inicia el juego con la tabla actual seleccionada (nueva o continuada).
     else:
         MensajeError('   El juego se cerrará.',1)
-        SalirJuego()
+
+    SalirJuego()
+
 
     return 1 #Finaliza el programa sin error...
 
